@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ডার্ট ল্যাব প্রো — শিখো · দেখো · প্র্যাকটিস করো</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#081120; --bg2:#0C1A30; --panel:#101F38; --panel2:#152A44;
+  --ink:#E6F0FB; --muted:#9FB4CE; --line:rgba(120,170,230,.14);
+  --dart:#13B9FD; --dartdeep:#0175C2; --amber:#FFC94D; --green:#4ADE80; --red:#F87171; --pink:#F472B6;
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter','Noto Sans Bengali',sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;overflow-x:hidden}
+.bn{font-family:'Noto Sans Bengali','Inter',sans-serif}
+.orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.32;pointer-events:none;z-index:0}
+.orb1{width:420px;height:420px;background:radial-gradient(circle,#0175C2,transparent 70%);top:-120px;left:-100px}
+.orb2{width:360px;height:360px;background:radial-gradient(circle,#13B9FD,transparent 70%);bottom:-80px;right:-80px;opacity:.2}
+@media (prefers-reduced-motion:no-preference){
+  .orb1{animation:drift 18s ease-in-out infinite alternate}
+  .orb2{animation:drift 22s ease-in-out infinite alternate-reverse}
+  @keyframes drift{to{transform:translate(60px,40px) scale(1.08)}}
+}
+header{position:relative;z-index:2;padding:40px 24px 10px;max-width:1200px;margin:0 auto}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.18em;color:var(--dart);text-transform:uppercase}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4.5vw,3.1rem);line-height:1.1;margin:.35rem 0 .4rem}
+h1 .grad{background:linear-gradient(90deg,var(--dart),#7DD3FC 60%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);max-width:660px;font-size:.98rem}
+/* tabs */
+.tabs{position:sticky;top:0;z-index:20;background:rgba(8,17,32,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-top:22px}
+.tabs-inner{max-width:1200px;margin:0 auto;padding:10px 24px;display:flex;gap:8px;overflow-x:auto}
+.tabbtn{flex:0 0 auto;font-family:'Inter';font-weight:600;font-size:.88rem;background:transparent;color:var(--muted);border:1px solid transparent;padding:9px 16px;border-radius:12px;cursor:pointer;transition:.2s;white-space:nowrap}
+.tabbtn:hover{color:var(--ink);background:var(--panel)}
+.tabbtn.active{background:linear-gradient(135deg,var(--dartdeep),#0a5c96);color:#fff;box-shadow:0 8px 20px -10px rgba(1,117,194,.8)}
+.tab{display:none;position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:28px 24px 70px}
+.tab.show{display:block}
+/* generic card */
+.card{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-bottom:26px;transform-style:preserve-3d;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 12px 30px -18px rgba(0,0,0,.7)}
+.card:hover{transform:perspective(900px) rotateX(1deg) rotateY(-1deg) translateY(-3px);box-shadow:0 24px 50px -20px rgba(1,117,194,.3)}
+@media (prefers-reduced-motion:reduce){.card:hover{transform:none}}
+.card h3{font-family:'Space Grotesk';font-size:1.3rem}
+.card-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.badge{font-family:'JetBrains Mono';font-size:.7rem;background:rgba(19,185,253,.12);color:var(--dart);border:1px solid rgba(19,185,253,.3);padding:4px 10px;border-radius:99px}
+.theory{color:var(--muted);margin:8px 0 14px}
+.theory b{color:var(--ink)}
+.theory code, .cheat code{font-family:'JetBrains Mono';font-size:.85em;background:rgba(19,185,253,.1);color:#7DD3FC;padding:1px 6px;border-radius:6px}
+.codebox{position:relative;background:#060D18;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:12px 0}
+.codebox .bar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(19,185,253,.06);border-bottom:1px solid var(--line)}
+.codebox .bar span{font-family:'JetBrains Mono';font-size:.7rem;color:var(--muted)}
+.copybtn{font-size:.75rem;font-weight:600;background:var(--dartdeep);color:#fff;border:0;padding:6px 14px;border-radius:8px;cursor:pointer;transition:.2s}
+.copybtn:hover{background:var(--dart);color:#04121F}
+.copybtn.copied{background:var(--green);color:#04121F}
+pre{padding:15px;overflow-x:auto;font-family:'JetBrains Mono';font-size:.83rem;line-height:1.6;color:#CFE8FF}
+.k{color:#13B9FD}.s{color:#FFC94D}.c{color:#5B7A9D;font-style:italic}.num{color:#F472B6}
+.practice{background:rgba(255,201,77,.06);border:1px dashed rgba(255,201,77,.4);border-radius:14px;padding:14px 18px;margin-top:12px}
+.linexplain{background:rgba(74,222,128,.05);border:1px solid rgba(74,222,128,.25);border-radius:14px;padding:14px 18px;margin:12px 0}
+.linexplain h4{font-family:'Space Grotesk';color:var(--green);font-size:.92rem;margin-bottom:10px}
+.lrow{display:grid;grid-template-columns:minmax(140px,1fr) 1.4fr;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);align-items:start}
+.lrow:last-child{border-bottom:0}
+.lcode{font-family:'JetBrains Mono';font-size:.78rem;background:#060D18;color:#7DD3FC;padding:6px 8px;border-radius:8px;white-space:pre-wrap;word-break:break-word}
+.ltext{color:var(--muted);font-size:.86rem;line-height:1.55}
+@media(max-width:640px){.lrow{grid-template-columns:1fr}}
+.practice h4{font-family:'Space Grotesk';color:var(--amber);font-size:.92rem;margin-bottom:6px}
+.practice ol{padding-left:20px;color:var(--muted);font-size:.9rem}
+.donebtn{margin-top:14px;font-weight:600;font-size:.84rem;background:transparent;color:var(--green);border:1px solid rgba(74,222,128,.45);padding:8px 18px;border-radius:10px;cursor:pointer;transition:.2s}
+.donebtn:hover{background:rgba(74,222,128,.12)}
+.donebtn.on{background:var(--green);color:#04121F;border-color:var(--green)}
+/* lessons layout */
+.lay{display:grid;grid-template-columns:240px 1fr;gap:24px}
+nav.toc{position:sticky;top:74px;align-self:start;background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--radius);padding:16px 12px;max-height:calc(100vh - 100px);overflow:auto}
+nav.toc h2{font-family:'Space Grotesk';font-size:.9rem;padding:0 8px 8px;color:var(--dart)}
+nav.toc a{display:flex;gap:8px;align-items:baseline;padding:7px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:.84rem;transition:.2s}
+nav.toc a:hover{background:rgba(19,185,253,.1);color:var(--ink)}
+nav.toc a .n{font-family:'JetBrains Mono';font-size:.68rem;color:var(--dartdeep)}
+nav.toc a.done .n{color:var(--green)}
+.dock-inner{background:linear-gradient(160deg,#0E2038,#081524);border:1px solid rgba(19,185,253,.3);border-radius:22px;padding:20px;box-shadow:0 30px 70px -30px rgba(1,117,194,.5)}
+.dock-inner h2{font-family:'Space Grotesk';font-size:1.3rem;margin-bottom:4px}
+.dock-inner p{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+.dock-inner iframe{width:100%;height:540px;border:0;border-radius:14px;background:#0B1526}
+/* ===== visual lab ===== */
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:900px){.vgrid{grid-template-columns:1fr}.lay{grid-template-columns:1fr}nav.toc{position:static;max-height:none}}
+.vinput{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.vinput input,.vinput select{background:#060D18;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:10px;font-family:'JetBrains Mono';font-size:.85rem;min-width:0;flex:1}
+.btn{font-weight:600;font-size:.83rem;background:var(--dartdeep);color:#fff;border:0;padding:9px 16px;border-radius:10px;cursor:pointer;transition:.2s}
+.btn:hover{background:var(--dart);color:#04121F}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);border-color:var(--dart)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;background:#060D18;border:1px solid var(--line);border-radius:12px;perspective:600px}
+.chip{font-family:'JetBrains Mono';font-size:.85rem;background:linear-gradient(145deg,#123456,#0B2138);border:1px solid rgba(19,185,253,.35);padding:8px 14px;border-radius:10px;cursor:pointer;animation:pop .4s ease;box-shadow:0 6px 14px -6px rgba(1,117,194,.6);user-select:none}
+.chip:hover{border-color:var(--red);color:var(--red)}
+.chip.mapc{border-color:rgba(255,201,77,.4)}
+@keyframes pop{0%{transform:rotateX(80deg) scale(.5);opacity:0}100%{transform:none;opacity:1}}
+.chips .shake{animation:shake .45s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.vmsg{font-size:.8rem;margin-top:6px;min-height:1.2em}
+.vmsg.err{color:var(--red)}.vmsg.ok{color:var(--green)}
+/* memory boxes */
+.membox{display:flex;flex-wrap:wrap;gap:14px;min-height:90px;padding:14px;background:#060D18;border:1px solid var(--line);border-radius:12px;perspective:700px}
+.mem{width:120px;border-radius:12px;overflow:hidden;border:1px solid rgba(19,185,253,.4);animation:flip .6s ease;box-shadow:0 10px 20px -8px rgba(1,117,194,.5)}
+@keyframes flip{0%{transform:rotateY(90deg)}100%{transform:none}}
+.mem .mt{font-family:'JetBrains Mono';font-size:.68rem;background:var(--dartdeep);color:#fff;padding:3px 8px}
+.mem .mv{font-family:'JetBrains Mono';font-size:.9rem;padding:10px 8px;background:#0B2138;word-break:break-all}
+.mem .mn{font-size:.7rem;color:var(--muted);padding:3px 8px 6px;background:#0B2138}
+/* loop stepper */
+.loopwrap{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}
+@media(max-width:700px){.loopwrap{grid-template-columns:1fr}}
+.loopcode{background:#060D18;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:'JetBrains Mono';font-size:.85rem;line-height:2}
+.lline{padding:0 10px;border-radius:8px;transition:.2s}
+.lline.hot{background:rgba(19,185,253,.18);outline:1px solid rgba(19,185,253,.5)}
+.statepanel{background:#060D18;border:1px solid var(--line);border-radius:12px;padding:12px;font-family:'JetBrains Mono';font-size:.82rem}
+.statepanel .row{display:flex;justify-content:space-between;padding:4px 6px;border-bottom:1px dashed var(--line)}
+.console{margin-top:8px;background:#04121F;border-radius:8px;padding:8px 10px;min-height:110px;max-height:150px;overflow:auto;color:var(--green);font-size:.8rem}
+/* inheritance tree */
+.tree{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px}
+.tnode{font-family:'JetBrains Mono';font-size:.85rem;background:linear-gradient(145deg,#123456,#0B2138);border:1px solid rgba(19,185,253,.4);padding:10px 20px;border-radius:12px;cursor:pointer;transition:.2s;box-shadow:0 8px 18px -8px rgba(1,117,194,.6)}
+.tnode:hover,.tnode.sel{border-color:var(--amber);transform:translateY(-2px)}
+.tarrow{color:var(--dart);font-size:1.1rem}
+.trow{display:flex;gap:40px}
+.tinfo{margin-top:10px;background:#060D18;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:.85rem;color:var(--muted);min-height:70px}
+.tinfo b{color:var(--ink)} .tinfo .inh{color:var(--dart)} .tinfo .ovr{color:var(--amber)}
+/* ===== exam ===== */
+.examgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.examcard{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:.25s}
+.examcard:hover{transform:translateY(-4px);box-shadow:0 20px 40px -18px rgba(1,117,194,.35);border-color:rgba(19,185,253,.4)}
+.examcard h3{font-family:'Space Grotesk';font-size:1.1rem;margin-bottom:4px}
+.examcard .meta{font-size:.78rem;color:var(--muted);margin-bottom:12px}
+.gradechip{display:inline-block;font-family:'JetBrains Mono';font-size:.75rem;padding:3px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted);margin-bottom:10px}
+.gradechip.good{border-color:rgba(74,222,128,.5);color:var(--green)}
+/* quiz run */
+.quizbox{max-width:760px;margin:0 auto}
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.timer{font-family:'JetBrains Mono';font-size:1rem;color:var(--amber);background:rgba(255,201,77,.08);border:1px solid rgba(255,201,77,.35);padding:6px 14px;border-radius:10px}
+.timer.danger{color:var(--red);border-color:var(--red);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:.5}}
+.qbar{height:8px;border-radius:99px;background:var(--panel);overflow:hidden;margin-bottom:18px}
+.qbar div{height:100%;background:linear-gradient(90deg,var(--dartdeep),var(--dart));transition:width .3s}
+.qtext{font-size:1.05rem;font-weight:600;margin-bottom:6px}
+.qcode{background:#060D18;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:'JetBrains Mono';font-size:.85rem;margin:10px 0;white-space:pre-wrap}
+.opt{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:12px 16px;border-radius:12px;margin:8px 0;cursor:pointer;font-size:.92rem;font-family:'JetBrains Mono';transition:.15s}
+.opt:hover{border-color:var(--dart);background:rgba(19,185,253,.08)}
+.opt.sel{border-color:var(--dart);background:rgba(19,185,253,.15)}
+.opt.right{border-color:var(--green);background:rgba(74,222,128,.12)}
+.opt.wrong{border-color:var(--red);background:rgba(248,113,113,.12)}
+/* result */
+.result{text-align:center;padding:10px}
+.bigGrade{font-family:'Space Grotesk';font-size:4rem;line-height:1;background:linear-gradient(135deg,var(--dart),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent;margin:10px 0}
+.rstats{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin:14px 0 20px}
+.rstat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 22px}
+.rstat .v{font-family:'JetBrains Mono';font-size:1.3rem;color:var(--dart)}
+.rstat .l{font-size:.72rem;color:var(--muted)}
+.wrongitem{text-align:left;background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.3);border-radius:12px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.wrongitem .ex{color:var(--muted);font-size:.82rem;margin-top:4px}
+/* dashboard */
+.dashgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;margin-bottom:26px}
+.stat3d{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--radius);padding:22px;text-align:center;transition:.25s}
+.stat3d:hover{transform:perspective(700px) rotateX(3deg) translateY(-4px);box-shadow:0 24px 44px -20px rgba(1,117,194,.4)}
+.stat3d .big{font-family:'Space Grotesk';font-size:2.4rem;background:linear-gradient(135deg,var(--dart),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat3d .lab{font-size:.8rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+th{color:var(--dart);font-family:'Space Grotesk';font-size:.82rem}
+.badges{display:flex;flex-wrap:wrap;gap:14px}
+.bdg{width:140px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 10px;opacity:.35;transition:.3s}
+.bdg.on{opacity:1;border-color:rgba(255,201,77,.5);box-shadow:0 12px 26px -12px rgba(255,201,77,.4)}
+.bdg .ic{font-size:1.8rem}
+.bdg .t{font-size:.78rem;font-weight:600;margin-top:4px}
+.bdg .d{font-size:.68rem;color:var(--muted)}
+/* cheat sheet */
+.cheatgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.cheat{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:14px;padding:18px}
+.cheat h4{font-family:'Space Grotesk';color:var(--dart);font-size:.95rem;margin-bottom:8px}
+.cheat pre{padding:10px;font-size:.78rem;background:#060D18;border-radius:10px}
+.note{font-size:.8rem;color:var(--muted);background:rgba(255,201,77,.06);border:1px dashed rgba(255,201,77,.35);border-radius:12px;padding:10px 14px;margin:14px 0}
+footer{text-align:center;color:var(--muted);font-size:.8rem;padding:28px;position:relative;z-index:2}
+footer .credit{margin-top:10px;font-size:.78rem;color:var(--dart)}
+footer .credit b{color:var(--amber)}
+/* ===== story mode ===== */
+.storywrap{max-width:880px;margin:0 auto}
+.storynav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;justify-content:center}
+.storynav button{font-family:'JetBrains Mono';font-size:.72rem;background:var(--panel);color:var(--muted);border:1px solid var(--line);padding:7px 12px;border-radius:99px;cursor:pointer;transition:.2s}
+.storynav button:hover{color:var(--ink);border-color:var(--dart)}
+.storynav button.active{background:var(--dartdeep);color:#fff;border-color:var(--dartdeep)}
+.storycard{background:linear-gradient(160deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 20px 50px -25px rgba(1,117,194,.4)}
+.storycard .chapno{font-family:'JetBrains Mono';color:var(--dart);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}
+.storycard h2{font-family:'Space Grotesk';font-size:1.6rem;margin:6px 0 14px}
+.storytext{background:rgba(19,185,253,.05);border-left:3px solid var(--dart);border-radius:0 14px 14px 0;padding:16px 20px;margin-bottom:18px;color:var(--ink);font-size:.98rem}
+.storytext b{color:var(--amber)}
+.storymoral{background:rgba(255,201,77,.07);border:1px dashed rgba(255,201,77,.4);border-radius:14px;padding:12px 18px;margin-top:14px;font-size:.88rem;color:var(--muted)}
+.storymoral b{color:var(--amber)}
+.storynavbtns{display:flex;justify-content:space-between;margin-top:22px}
+:focus-visible{outline:2px solid var(--dart);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="orb orb1"></div><div class="orb orb2"></div>
+
+<header>
+  <div class="eyebrow bn">// ডার্ট ল্যাব প্রো — শেখা · দেখা · প্র্যাকটিস</div>
+  <h1>Dart <span class="grad">Lab Pro</span></h1>
+  <p class="sub bn">Theory poro → Visual Lab e concept <b>chokhe dekho</b> → <b>Golpe Golpe</b> e golpo diye Basic theke Advanced shikho → Compiler e run koro → Exam diye <b>CGPA</b> earn koro. Puro Dart, ekdom basic theke advance — sob Banglay.</p>
+</header>
+
+<div class="tabs"><div class="tabs-inner">
+  <button class="tabbtn active bn" data-tab="lessons">📘 পাঠ (Lesson)</button>
+  <button class="tabbtn bn" data-tab="visual">🎬 ভিজ্যুয়াল ল্যাব</button>
+  <button class="tabbtn bn" data-tab="story">🎭 গল্পে গল্পে ডার্ট</button>
+  <button class="tabbtn bn" data-tab="exam">🏆 পরীক্ষা প্রতিযোগিতা</button>
+  <button class="tabbtn bn" data-tab="cheat">📄 চিট শিট</button>
+  <button class="tabbtn bn" data-tab="dash">📊 ড্যাশবোর্ড</button>
+</div></div>
+
+<!-- ============ LESSONS ============ -->
+<section class="tab show" id="tab-lessons">
+  <div class="lay">
+    <nav class="toc bn" aria-label="Lessons"><h2 class="bn">পাঠ তালিকা</h2><div id="tocLinks"></div></nav>
+    <main id="lessonsMain"></main>
+  </div>
+  <div class="dock-inner" id="compiler" style="margin-top:10px">
+    <h2 class="bn">⚡ লাইভ ডার্ট কম্পাইলার</h2>
+    <p class="bn">Official <b>DartPad</b> — real compiler, install lagbe na. Lesson theke <b>Copy</b> chapo → ekhane paste → <b>Run</b>.</p>
+    <iframe src="https://dartpad.dev/?embed=true&theme=dark" title="DartPad" loading="lazy" allow="clipboard-write"></iframe>
+  </div>
+</section>
+
+<!-- ============ VISUAL LAB ============ -->
+<section class="tab" id="tab-visual">
+  <div class="note bn">💡 Ekhane প্রতিটা concept <b>interactive</b> — nije input dao, animation dekho. Chokhe dekhle brain e permanent hoye jay!</div>
+  <div class="vgrid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge bn">সেশন ২-৩</span><h3 class="bn">🧠 মেমরি বক্স — ভ্যারিয়েবল কীভাবে থাকে</h3></div>
+      <p class="theory bn">ভ্যারিয়েবল ঘোষণা করলে মেমরিতে একটা <b>বক্স</b> তৈরি হয় — বক্সের গায়ে <b>টাইপ</b> লেখা থাকে। <code>var</code> দিলে Dart নিজেই টাইপ <b>বুঝে নেয়</b> (infer করে) — এখানে দেখো!</p>
+      <div class="vinput">
+        <select id="memType"><option>int</option><option>double</option><option>String</option><option>bool</option><option>var</option></select>
+        <input id="memName" placeholder="নাম (যেমন: boyosh)" maxlength="12">
+        <input id="memVal" placeholder="ভ্যালু (যেমন: 22)" maxlength="14">
+        <button class="btn bn" id="memAdd">তৈরি করো</button>
+        <button class="btn ghost bn" id="memClr">মুছে ফেলো</button>
+      </div>
+      <div class="membox" id="memBox"></div>
+      <p class="vmsg" id="memMsg"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge bn">সেশন ৫</span><h3 class="bn">📦 লিস্ট বনাম সেট বনাম ম্যাপ</h3></div>
+      <p class="theory bn"><b>Set এ ডুপ্লিকেট দিলে কী হয় দেখো!</b> চিপ এ ক্লিক করলে সেটা মুছে যাবে (<code>remove()</code>)।</p>
+      <div class="vinput"><input id="colVal" placeholder="ভ্যালু লিখো (যেমন: আম)" maxlength="12">
+        <button class="btn bn" id="addList">List.add</button><button class="btn bn" id="addSet">Set.add</button></div>
+      <div class="bn" style="font-family:'JetBrains Mono';font-size:.72rem;color:var(--muted);margin-bottom:4px">List (ডুপ্লিকেট চলবে, ক্রমানুসারে):</div>
+      <div class="chips" id="listChips"></div>
+      <div class="bn" style="font-family:'JetBrains Mono';font-size:.72rem;color:var(--muted);margin:8px 0 4px">Set (শুধু ইউনিক ভ্যালু):</div>
+      <div class="chips" id="setChips"></div>
+      <div class="vinput" style="margin-top:10px"><input id="mapK" placeholder="কী (key)" maxlength="10"><input id="mapV" placeholder="ভ্যালু (value)" maxlength="12"><button class="btn bn" id="addMap">Map add</button></div>
+      <div class="bn" style="font-family:'JetBrains Mono';font-size:.72rem;color:var(--muted);margin-bottom:4px">Map (key : value):</div>
+      <div class="chips" id="mapChips"></div>
+      <p class="vmsg" id="colMsg"></p>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge bn">সেশন ৭</span><h3 class="bn">🔁 লুপ স্টেপার — for লুপের ভেতরে কী হয়</h3></div>
+      <p class="theory bn"><b>Step</b> চাপো — প্রতিটা ধাপে কোন লাইন চলছে, <code>i</code> এর ভ্যালু কত, condition true নাকি false — সব লাইভ দেখতে পাবে।</p>
+      <div class="loopwrap">
+        <div class="loopcode" id="loopCode">
+          <div class="lline" data-l="0"><span class="k">for</span> (<span class="k">int</span> i = <span class="num">1</span>; i &lt;= <span class="num">4</span>; i++) {</div>
+          <div class="lline" data-l="1">&nbsp;&nbsp;<span class="k">print</span>(<span class="s">"i = $i"</span>);</div>
+          <div class="lline" data-l="2">}</div>
+          <div class="lline" data-l="3"><span class="c">// লুপ শেষ</span></div>
+        </div>
+        <div class="statepanel">
+          <div class="row"><span class="bn">i =</span><b id="loopI" style="color:var(--pink)">—</b></div>
+          <div class="row"><span>condition (i&lt;=4)</span><b id="loopCond">—</b></div>
+          <div class="row"><span class="bn">ধাপ</span><b id="loopStepName" style="color:var(--dart)">প্রস্তুত</b></div>
+          <div class="console" id="loopOut"></div>
+        </div>
+      </div>
+      <div class="vinput" style="margin-top:12px">
+        <button class="btn bn" id="loopStep">ধাপ ▶</button>
+        <button class="btn ghost bn" id="loopAuto">অটো চালাও</button>
+        <button class="btn ghost bn" id="loopReset">রিসেট</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge bn">সেশন ১০-১১</span><h3 class="bn">🌳 ইনহেরিটেন্স ট্রি</h3></div>
+      <p class="theory bn">নোডে <b>ক্লিক</b> করো — কোন প্রপার্টি <span style="color:var(--dart)">ইনহেরিটেড (উত্তরাধিকার সূত্রে পাওয়া)</span>, কোন মেথড <span style="color:var(--amber)">ওভাররাইড করা হয়েছে</span> দেখতে পাবে।</p>
+      <div class="tree">
+        <div class="tnode" data-n="animal">abstract Animal</div>
+        <div class="tarrow bn">↓ extends (উত্তরাধিকার) ↓</div>
+        <div class="trow">
+          <div class="tnode" data-n="cat">Cat</div>
+          <div class="tnode" data-n="dog">Dog</div>
+        </div>
+      </div>
+      <div class="tinfo bn" id="treeInfo">একটা নোডে ক্লিক করো…</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ GOLPE GOLPE (STORY MODE) ============ -->
+<section class="tab" id="tab-story">
+  <div class="note bn">🎭 <b>Golpe Golpe Dart:</b> ekjon student er journey follow koro — shurute shudhu variable chinto na, seshe pura app banate pare! Protita chapter = ekta golpo + code + bujhar explanation. Basic theke Advanced (Exception, Enum, Mixin, Generics, Async/Future) — sob ekhane.</div>
+  <div class="storywrap">
+    <div class="storynav" id="storyNav"></div>
+    <div class="storycard" id="storyCard"></div>
+  </div>
+</section>
+
+<!-- ============ EXAM ============ -->
+<section class="tab" id="tab-exam">
+  <div id="examHome">
+    <div class="note bn">🏆 <b>নিয়ম:</b> প্রতিটা পরীক্ষায় টাইমার আছে। সাবমিট করলে স্কোর, গ্রেড আর গ্রেড পয়েন্ট পাবে — ইউনিভার্সিটির মতো। সব পরীক্ষা দিলে <b>CGPA</b> হিসাব হবে (ড্যাশবোর্ডে দেখো)। আবার দিলে <b>সেরা স্কোর</b>টাই গণনা হবে।</div>
+    <div class="examgrid" id="examGrid"></div>
+    <div class="card" style="margin-top:26px">
+      <div class="card-head"><span class="badge bn">প্র্যাকটিস গেম</span><h3 class="bn">🎯 আউটপুট গেস করো</h3></div>
+      <p class="theory bn">Code dekhe output guess koro — grade count hobe na, kintu brain sharp hobe! 5 round.</p>
+      <button class="btn bn" id="guessStart">গেম শুরু করো</button>
+      <div id="guessArea" style="margin-top:14px"></div>
+    </div>
+  </div>
+  <div id="examRun" style="display:none" class="quizbox"></div>
+</section>
+
+<!-- ============ CHEAT SHEET ============ -->
+<section class="tab" id="tab-cheat">
+  <div class="note bn">📄 Exam er age 5 minute e puro Dart revision — ei ek page e sob syntax.</div>
+  <div class="cheatgrid" id="cheatGrid"></div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section class="tab" id="tab-dash">
+  <div class="dashgrid">
+    <div class="stat3d"><div class="big" id="dCgpa">—</div><div class="lab bn">CGPA (৪.০০ স্কেল)</div></div>
+    <div class="stat3d"><div class="big" id="dLessons">0/11</div><div class="lab bn">পাঠ সম্পূর্ণ হয়েছে</div></div>
+    <div class="stat3d"><div class="big" id="dExams">0/4</div><div class="lab bn">Exams taken</div></div>
+    <div class="stat3d"><div class="big" id="dBadges">0</div><div class="lab bn">ব্যাজ আনলক হয়েছে</div></div>
+  </div>
+  <div class="card"><h3 class="bn" style="margin-bottom:10px">📋 পরীক্ষার ফলাফল</h3>
+    <table><thead><tr><th class="bn">পরীক্ষা</th><th class="bn">স্কোর</th><th>%</th><th class="bn">গ্রেড</th><th>GP</th></tr></thead><tbody id="resTable"><tr><td colspan="5" class="bn" style="color:var(--muted)">এখনো কোনো পরীক্ষা দাওনি — "পরীক্ষা প্রতিযোগিতা" ট্যাবে যাও!</td></tr></tbody></table>
+  </div>
+  <div class="card"><h3 class="bn" style="margin-bottom:10px">🏅 ব্যাজসমূহ</h3><div class="badges" id="badgeGrid"></div></div>
+  <div class="card"><h3 class="bn" style="margin-bottom:6px">🔁 রিভিশন লিস্ট</h3><p class="theory bn">পরীক্ষায় ভুল করা প্রশ্নগুলো এখানে জমা হবে — ব্যাখ্যাসহ।</p><div id="revList" class="bn" style="color:var(--muted);font-size:.9rem">এখনো কিছু নেই। ভুল করলে এখানে আসবে (ভুল করা খারাপ না — এটাই শেখার পথ!)</div></div>
+  <div class="note bn">⚠️ Mone rekho: ei site e kono database nei — browser <b>refresh dile sob reset</b> hoye jabe. Permanent save Firebase diye hoy — jeta course er Session 31 e shikhbe, tokhon nije add korte parbe!</div>
+</section>
+
+<footer class="bn">ডার্ট ল্যাব প্রো — ফ্লাটার কোর্সের (সেশন ২–১২) সঙ্গী। শেখো → দেখো → রান করো → প্র্যাকটিস করো।
+  <div class="credit bn">তৈরি করেছেন <b>Md Ismail Hossain Nahin</b> · 📞 01947303196</div>
+</footer>
+
+<script>
+/* ================= DATA ================= */
+const lessons=[
+{id:"datatypes",s:"সেশন ২",t:"ডেটা টাইপ (Data Types)",
+ th:`ডার্ট একটি <b>স্ট্যাটিকালি টাইপড</b> ভাষা — ভ্যারিয়েবলের টাইপ কম্পাইল টাইমেই ফিক্স হয়ে যায়, ভুল টাইপ দিলে কম্পাইলার আগেই ধরে ফেলে। প্রধান টাইপ: <code>int</code> (পূর্ণ সংখ্যা), <code>double</code> (দশমিক সংখ্যা), <code>String</code> (লেখা/টেক্সট), <code>bool</code> (true/false), <code>num</code> (int ও double দুটোই রাখতে পারে)। <b>কেন দরকার?</b> টাইপ জানা থাকলে মেমরি এফিশিয়েন্ট হয়, রানটাইম এরর কমে যায়।`,
+ code:`void main() {
+  int boyosh = 22;              // পূর্ণ সংখ্যা রাখার জন্য int
+  double cgpa = 3.75;           // দশমিক সংখ্যা রাখার জন্য double
+  String naam = "Fahim";        // লেখা/টেক্সট রাখার জন্য String
+  bool student = true;          // true/false রাখার জন্য bool
+  num jekono = 10;              // num এ int ও double দুটোই যায়
+  jekono = 10.5;                // এখন double ও নিতে পারলো, এরর হবে না
+
+  print("নাম: $naam, বয়স: $boyosh");
+  print("CGPA: $cgpa, স্টুডেন্ট: $student");
+}`,
+ line:[
+  {l:'int boyosh = 22;',e:'"boyosh" নামে একটা বক্স বানানো হলো, যেখানে শুধু পূর্ণ সংখ্যা (int) থাকতে পারবে — এখানে 22 রাখা হলো।'},
+  {l:'double cgpa = 3.75;',e:'"cgpa" নামে বক্স, যেখানে দশমিকসহ সংখ্যা (double) থাকে — 3.75 রাখা হলো।'},
+  {l:'String naam = "Fahim";',e:'"naam" বক্সে টেক্সট/লেখা রাখা হলো — টেক্সট সবসময় ডাবল কোটেশনের ("") মধ্যে লিখতে হয়।'},
+  {l:'bool student = true;',e:'"student" বক্সে শুধু true অথবা false থাকতে পারে — এটা একটা হ্যাঁ/না প্রশ্নের উত্তরের মতো।'},
+  {l:'num jekono = 10;',e:'"num" টাইপ int এবং double — দুটোই গ্রহণ করতে পারে, তাই এটা একটু নমনীয়।'},
+  {l:'print("নাম: $naam, বয়স: $boyosh");',e:'প্রিন্ট করার সময় ভ্যারিয়েবলের সামনে $ চিহ্ন দিলে তার ভ্যালু বসে যায় — একে বলে স্ট্রিং ইন্টারপোলেশন।'},
+ ],
+ pr:["নিজের নাম, রোল, CGPA, স্টুডেন্ট কিনা — এই ৪টা ভ্যারিয়েবল বানিয়ে প্রিন্ট করো।","একটা int ভ্যারিয়েবলে String রাখার চেষ্টা করো — কী এরর আসে সেটা পড়ো।"]},
+{id:"interp",s:"সেশন ৩",t:"স্ট্রিং ইন্টারপোলেশন (String Interpolation)",
+ th:`লেখার (String) ভেতরে ভ্যারিয়েবল বসাতে <code>$variable</code> ব্যবহার হয়, আর হিসাব/এক্সপ্রেশন হলে <code>\${expression}</code> ব্যবহার হয়। <b>নিয়ম:</b> শুধু ভ্যারিয়েবল হলে → <code>$name</code>; কোনো হিসাব বা মেথড কল হলে → <code>\${a + b}</code>।`,
+ code:`void main() {
+  String naam = "Dart";
+  int a = 5, b = 3;
+
+  print("হ্যালো $naam!");           // সরাসরি ভ্যারিয়েবল বসানো হলো
+  print("যোগফল: \${a + b}");        // হিসাব করার জন্য {} ব্যবহার হলো
+  print("বড় হাতের: \${naam.toUpperCase()}"); // মেথড কল করার জন্যও {} লাগে
+}`,
+ line:[
+  {l:'print("হ্যালো $naam!");',e:'"$naam" লিখলে naam ভ্যারিয়েবলের ভ্যালু (Dart) ওই জায়গায় বসে যাবে — আউটপুট হবে "হ্যালো Dart!"'},
+  {l:'print("যোগফল: \${a + b}");',e:'যেহেতু a+b একটা হিসাব (শুধু ভ্যারিয়েবল না), তাই {} দিয়ে ঘিরে দিতে হয়েছে — নাহলে Dart এটাকে টেক্সট হিসেবে ধরে নিতো।'},
+  {l:'print("বড় হাতের: \${naam.toUpperCase()}");',e:'.toUpperCase() একটা মেথড কল, তাই এটাও {} এর ভেতরে লিখতে হয়েছে — আউটপুট হবে "DART"।'},
+ ],
+ pr:["দুইটা সংখ্যার যোগফল-বিয়োগফল এক লাইনে ইন্টারপোলেশন দিয়ে প্রিন্ট করো।","কোনো নামের length \${...} দিয়ে প্রিন্ট করো।"]},
+{id:"vardyn",s:"সেশন ৩",t:"var, dynamic, Object — পার্থক্য",
+ th:`<code>var</code>: টাইপ নিজে থেকে বুঝে নেয় (infer), একবার সেট হলে আর পাল্টানো যায় না (নিরাপদ)। <code>dynamic</code>: টাইপ চেকিং বন্ধ থাকে — যেকোনো সময় যেকোনো টাইপ রাখা যায় (ঝুঁকিপূর্ণ)। <code>Object</code>: সবকিছুর মূল/অভিভাবক টাইপ। <b>ভালো অভ্যাস:</b> যতটা সম্ভব var ব্যবহার করা।`,
+ code:`void main() {
+  var shohor = "Dhaka";     // Dart নিজেই বুঝে নিলো এটা String
+  // shohor = 100;          // এরর! String থেকে int এ পাল্টানো যাবে না
+
+  dynamic x = "Hello";      // dynamic এ শুরুতে String
+  print(x);
+  x = 999;                  // এখানে int এ পাল্টে ফেলা হলো — dynamic এ এটা allowed
+  print(x);
+}`,
+ line:[
+  {l:'var shohor = "Dhaka";',e:'var লিখলে Dart নিজেই বুঝে নেয় এটা String টাইপ — এরপর এটাকে আর অন্য টাইপে পাল্টানো যাবে না।'},
+  {l:'dynamic x = "Hello";',e:'dynamic দিয়ে বানানো ভ্যারিয়েবলের টাইপ বাঁধা থাকে না — এটা যেকোনো টাইপের ভ্যালু নিতে পারে।'},
+  {l:'x = 999;',e:'এখানে x আগে String ছিল, এখন int হয়ে গেলো — কোনো এরর দেখাবে না, কারণ dynamic এ টাইপ চেক বন্ধ থাকে।'},
+ ],
+ pr:["var দিয়ে বানানো int ভ্যারিয়েবলে পরে String রাখার চেষ্টা করো — এরর পড়ো।","dynamic ভ্যারিয়েবলে পর্যায়ক্রমে String→int→bool→List রেখে প্রিন্ট করো।"]},
+{id:"operators",s:"সেশন ৪",t:"ডার্ট অপারেটর",
+ th:`গাণিতিক অপারেটর: <code>+ - * / % ~/</code> (<code>~/</code> মানে ইন্টিজার ভাগ, দশমিক বাদ)। লজিক্যাল: <code>&& || !</code>। স্পেশাল: <code>??</code> (null হলে ডিফল্ট ভ্যালু), <code>?.</code> (null-নিরাপদ অ্যাক্সেস), <code>is</code> (টাইপ চেক)।`,
+ code:`void main() {
+  int a = 10, b = 3;
+  print(a / b);    // 3.333... সাধারণ ভাগ, দশমিকসহ
+  print(a ~/ b);   // 3        ইন্টিজার ভাগ, দশমিক বাদ
+  print(a % b);    // 1        ভাগশেষ (remainder)
+
+  String? naam;                 // naam এখন null
+  print(naam ?? "Guest");       // null হলে "Guest" ব্যবহার হবে
+
+  print(a is int);              // true — a সত্যিই int কিনা চেক করা হলো
+}`,
+ line:[
+  {l:'print(a ~/ b);',e:'~/ অপারেটর ভাগ করে শুধু পূর্ণ সংখ্যাটুকু রাখে — 10÷3 = 3.33 কিন্তু ~/ দিলে উত্তর হয় 3।'},
+  {l:'print(a % b);',e:'% অপারেটর ভাগশেষ বের করে — 10 কে 3 দিয়ে ভাগ করলে 3×3=9 বাকি থাকে 1, তাই উত্তর 1।'},
+  {l:'print(naam ?? "Guest");',e:'?? চেক করে বামের ভ্যালু null কিনা — null হলে ডানপাশের ভ্যালু ব্যবহার হয়, নাহলে আসল ভ্যালুই থাকে।'},
+  {l:'print(a is int);',e:'is দিয়ে চেক করা হয় কোনো ভ্যারিয়েবল আসলেই ওই টাইপের কিনা — এখানে a সত্যিই int, তাই true।'},
+ ],
+ pr:["% ব্যবহার করে কোনো সংখ্যা জোড় না বিজোড় বের করো।","?? ব্যবহার করে null নাম হলে 'কোনো নাম নেই' প্রিন্ট করো।"]},
+{id:"finalconst",s:"সেশন ৪",t:"final, const, late — কোনটা কখন",
+ th:`<code>final</code>: একবার ভ্যালু সেট হয়, কিন্তু ভ্যালুটা রানটাইমে (প্রোগ্রাম চলাকালীন) ঠিক হয় — যেমন API থেকে আসা ডেটা। <code>const</code>: কম্পাইল টাইমেই ভ্যালু ফিক্সড থাকতে হবে — যেমন pi এর মান। <code>late</code>: ভ্যারিয়েবল এখন ঘোষণা করা হলো, কিন্তু ভ্যালু পরে দেওয়া হবে। <b>মনে রাখো:</b> const = কম্পাইল-টাইম কনস্ট্যান্ট, final = রানটাইম কনস্ট্যান্ট।`,
+ code:`void main() {
+  final ekhon = DateTime.now();  // ঠিক আছে — রানটাইমে ভ্যালু বসে
+  const pi = 3.1416;             // ঠিক আছে — আগে থেকেই জানা ভ্যালু
+  // const t = DateTime.now();   // এরর! DateTime.now() রানটাইম ভ্যালু, const এ চলবে না
+
+  late String greeting;           // এখন শুধু ঘোষণা, ভ্যালু নেই
+  greeting = "আসসালামু আলাইকুম";   // এখন ভ্যালু দেওয়া হলো
+  print("$greeting | $pi | $ekhon");
+}`,
+ line:[
+  {l:'final ekhon = DateTime.now();',e:'final ভ্যারিয়েবলের ভ্যালু প্রোগ্রাম চলার সময় (রানটাইমে) ঠিক হয় — একবার সেট হলে আর বদলানো যাবে না।'},
+  {l:'const pi = 3.1416;',e:'const ভ্যালু কম্পাইল হওয়ার আগেই জানা থাকতে হবে — তাই DateTime.now() const এ দেওয়া যাবে না, কারণ সেটা রানটাইমে ঠিক হয়।'},
+  {l:'late String greeting;',e:'late মানে "এখন ঘোষণা করছি, কিন্তু ভ্যালু পরে দিবো" — ভ্যালু দেওয়ার আগে ব্যবহার করলে এরর আসবে।'},
+ ],
+ pr:["const দিয়ে বানানো ইউনিভার্সিটির নাম পরে পাল্টানোর চেষ্টা করো — এরর দেখো।","late int ভ্যালু না দিয়ে প্রিন্ট করলে কী এরর আসে দেখো।"]},
+{id:"collections",s:"সেশন ৫",t:"কালেকশন: List, Set, Map",
+ th:`<b>List</b>: ক্রমানুসারে সাজানো, ডুপ্লিকেট (একই ভ্যালু বারবার) রাখা যায়, ইনডেক্স দিয়ে অ্যাক্সেস করা যায়। <b>Set</b>: ডুপ্লিকেট এমনিতেই বাদ পড়ে যায়। <b>Map</b>: key-value জোড়া হিসেবে থাকে (API/JSON ডেটা এই ফরম্যাটেই আসে)। প্রধান মেথড: <code>add()</code>, <code>remove()</code>, <code>length</code>, <code>contains()</code>।`,
+ code:`void main() {
+  List<String> phol = ["আম", "আপেল", "আম"];
+  phol.add("কলা");
+  print(phol);                         // [আম, আপেল, আম, কলা]
+
+  Set<int> idGulo = {1, 2, 2, 3};
+  print(idGulo);                       // {1, 2, 3} — ডুপ্লিকেট বাদ গেলো
+
+  Map<String, dynamic> student = {"naam": "Fahim", "cgpa": 3.75};
+  student["dept"] = "CSE";             // নতুন key-value জোড়া
+  print(student["naam"]);              // শুধু naam এর ভ্যালু
+  print(student);
+}`,
+ line:[
+  {l:'phol.add("কলা");',e:'add() মেথড সবসময় লিস্টের একদম শেষে নতুন ভ্যালু জুড়ে দেয়।'},
+  {l:'Set<int> idGulo = {1, 2, 2, 3};',e:'Set এ 2 দুইবার লেখা হলেও একবারই থাকবে — Set কখনো ডুপ্লিকেট রাখে না।'},
+  {l:'student["dept"] = "CSE";',e:'Map এ নতুন key-value জোড়া যোগ করতে হলে ব্র্যাকেটে key দিয়ে সরাসরি ভ্যালু বসিয়ে দেওয়া যায়।'},
+  {l:'print(student["naam"]);',e:'Map থেকে একটা নির্দিষ্ট ভ্যালু বের করতে হলে তার key ব্র্যাকেটের ভেতরে লিখতে হয়।'},
+ ],
+ pr:["৫টা সাবজেক্টের একটা List বানাও, একটা remove করো, তারপর length প্রিন্ট করো।","নিজের তথ্য দিয়ে একটা Map বানাও (naam, boyosh, dept) এবং প্রিন্ট করো।"]},
+{id:"conditions",s:"সেশন ৬",t:"শর্তসাপেক্ষ কোড: if-else ও switch",
+ th:`কোনো একটা রেঞ্জ চেক করতে হলে (যেমন marks >= 80) → <code>if-else</code> ব্যবহার হয়; একদম নির্দিষ্ট ভ্যালুর সাথে মিলাতে হলে → <code>switch-case</code> বেশি পরিষ্কার দেখায়।`,
+ code:`void main() {
+  int marks = 85;
+  if (marks >= 80) {
+    print("A+");                // marks 80 বা তার বেশি হলে এটা চলবে
+  } else if (marks >= 70) {
+    print("A");                 // 70-79 এর মধ্যে হলে এটা চলবে
+  } else {
+    print("আবার চেষ্টা করো");     // বাকি সব ক্ষেত্রে
+  }
+
+  String din = "Saturday";
+  switch (din) {
+    case "Saturday":
+    case "Wednesday":
+      print("ক্লাস আছে! (রাত ৯টা)");
+      break;
+    default:
+      print("আজ ক্লাস নেই");
+  }
+}`,
+ line:[
+  {l:'if (marks >= 80) {',e:'উপর থেকে নিচে যাচাই হয় — প্রথম যেই শর্তটা true হবে, সেটার ভেতরের কোডই চলবে, বাকিগুলো স্কিপ হয়ে যাবে।'},
+  {l:'switch (din) {',e:'switch এ din এর ভ্যালুর সাথে case গুলো মিলিয়ে দেখা হয় — মিলে গেলে ওই case এর কোড চলে।'},
+  {l:'case "Saturday":\n    case "Wednesday":',e:'দুইটা case পাশাপাশি লেখা মানে দুইটার যেকোনো একটা মিললেই নিচের কোড চলবে — একে case গ্রুপিং বলে।'},
+  {l:'break;',e:'break দিলে switch থেকে বের হয়ে যায় — না দিলে পরের case এও ঢুকে পড়বে (fall-through), যেটা সাধারণত এড়ানো উচিত।'},
+ ],
+ pr:["Marks থেকে A+, A, B, C, F গ্রেড বের করো।","switch ব্যবহার করে মাসের সংখ্যা থেকে মাসের নাম বের করো।"]},
+{id:"loops",s:"সেশন ৭",t:"লুপ: for, while, do-while",
+ th:`<code>for</code>: কতবার চলবে সেটা আগে থেকেই জানা থাকলে ব্যবহার হয়। <code>while</code>: শর্ত আগে চেক করে, তারপর রান করে। <code>do-while</code>: শর্ত মিথ্যা হলেও <b>অন্তত ১ বার</b> চলবেই। <code>for-in</code>: List/Set এর প্রতিটা আইটেমের উপর দিয়ে চলে। <code>break</code>/<code>continue</code> দিয়ে লুপের ফ্লো নিয়ন্ত্রণ করা যায়।`,
+ code:`void main() {
+  for (int i = 1; i <= 5; i++) {
+    print("For লুপ: $i");                 // ৫ বার চলবে
+  }
+
+  int n = 3;
+  while (n > 0) {
+    print("While লুপ: $n");
+    n--;                                    // প্রতিবার n কমছে, নাহলে infinite loop হবে
+  }
+
+  int x = 10;
+  do {
+    print("অন্তত একবার তো চলবেই! x=$x");     // শর্ত false হলেও একবার চলে
+  } while (x < 5);
+
+  for (var lang in ["Dart", "Flutter"]) {
+    print(lang);                            // লিস্টের প্রতিটা আইটেম দিয়ে ঘুরে ঘুরে চলে
+  }
+}`,
+ line:[
+  {l:'for (int i = 1; i <= 5; i++) {',e:'for লুপে তিনটা অংশ থাকে: শুরুর ভ্যালু (i=1), শর্ত (i<=5), আর প্রতি ধাপে কী হবে (i++) — সবগুলো একসাথে লেখা হয়।'},
+  {l:'n--;',e:'এই লাইন না থাকলে n কখনো 0 হবে না, আর while লুপ থামবে না — একে infinite loop বলে, খুব সাবধান থাকতে হয়।'},
+  {l:'do {',e:'do-while এ প্রথমে body একবার চলে, তারপর শর্ত চেক হয় — তাই শর্ত শুরুতেই false হলেও কমপক্ষে একবার আউটপুট আসবে।'},
+  {l:'for (var lang in ["Dart", "Flutter"]) {',e:'for-in লুপ কোনো লিস্ট বা সেটের প্রতিটা এলিমেন্ট একে একে নিয়ে ভেতরের কোড চালায় — index নিয়ে ভাবতে হয় না।'},
+ ],
+ pr:["১ থেকে ২০ পর্যন্ত জোড় সংখ্যাগুলো for দিয়ে প্রিন্ট করো।","৫ এর নামতা while লুপ দিয়ে প্রিন্ট করো।","do-while দিয়ে দেখাও যে শর্ত false হলেও অন্তত একবার আউটপুট আসে।"]},
+{id:"functions",s:"সেশন ৮",t:"ফাংশন ও প্যারামিটার",
+ th:`<b>Positional (ক্রমানুসারে)</b>: প্যারামিটার লেখার ক্রম গুরুত্বপূর্ণ — যেমন <code>add(5,3)</code>। <b>Named (নাম দিয়ে)</b>: <code>{}</code> ব্যবহার হয় — কল করার সময় নাম বলে দিতে হয়, <code>required</code> দিলে সেটা বাধ্যতামূলক হয়ে যায়। ফ্লাটারের সব উইজেটই named parameter ব্যবহার করে!`,
+ code:`// একটা সাধারণ ফাংশন — দুইটা সংখ্যা যোগ করে রিটার্ন করে
+int jogFol(int a, int b) => a + b;
+
+// named parameter সহ ফাংশন — Flutter এ এভাবেই বেশি লেখা হয়
+void porichoy({required String naam, int boyosh = 18}) {
+  print("আমি $naam, বয়স $boyosh");
+}
+
+void main() {
+  print(jogFol(5, 3));                 // 8
+  porichoy(naam: "Fahim", boyosh: 22); // দুইটাই দেওয়া হলো
+  porichoy(naam: "Rakib");             // boyosh না দিলে default 18 বসবে
+}`,
+ line:[
+  {l:'int jogFol(int a, int b) => a + b;',e:'=> চিহ্ন দিয়ে এক লাইনে ফাংশন লেখা যায় — এটা { return a+b; } লেখার শর্টকাট।'},
+  {l:'void porichoy({required String naam, int boyosh = 18}) {',e:'{} এর ভেতরের প্যারামিটার নাম দিয়ে কল করতে হয়। required দিলে সেটা অবশ্যই দিতে হবে, না দিলে সেটা optional এবং default ভ্যালু বসে।'},
+  {l:'porichoy(naam: "Rakib");',e:'boyosh না দেওয়াতে এখানে ডিফল্ট ভ্যালু 18 বসে গেলো — required না থাকলে এটা করা যায়।'},
+ ],
+ pr:["দুইটা সংখ্যার মধ্যে বড়টা রিটার্ন করে এমন একটা ফাংশন বানাও।","calculateArea({required width, required height}) নামে একটা ফাংশন বানাও।","Arrow (=>) ব্যবহার করে square(n) ফাংশন বানাও।"]},
+{id:"oop",s:"সেশন ৯",t:"ক্লাস, অবজেক্ট ও কনস্ট্রাক্টর",
+ th:`Class হলো নকশা/ব্লুপ্রিন্ট, Object হলো সেই নকশা থেকে তৈরি আসল জিনিস। শর্টকাট: <code>Student(this.name)</code>। <b>Named constructor</b>: <code>Student.guest()</code> — একই ক্লাসে একাধিক constructor বানানো যায়।`,
+ code:`class Student {
+  String naam;
+  double cgpa;
+
+  Student(this.naam, this.cgpa);              // সাধারণ constructor
+  Student.guest() : naam = "Guest", cgpa = 0.0; // named constructor
+
+  void dekhao() => print("\$naam — CGPA: \$cgpa");
+}
+
+void main() {
+  Student("Fahim", 3.75).dekhao();  // সাধারণ constructor দিয়ে object
+  Student.guest().dekhao();         // named constructor দিয়ে object
+}`,
+ line:[
+  {l:'class Student {',e:'class দিয়ে একটা নকশা বানানো হলো, যেখানে বলা আছে প্রতিটা Student এর কী কী property (naam, cgpa) থাকবে।'},
+  {l:'Student(this.naam, this.cgpa);',e:'এটা constructor — object বানানোর সময় এই মেথড অটোমেটিক চলে, this.naam মানে ক্লাসের naam প্রপার্টিতে ভ্যালু বসানো।'},
+  {l:'Student.guest() : naam = "Guest", cgpa = 0.0;',e:'এটা একটা আলাদা, নাম-দেওয়া (named) constructor — একই ক্লাস থেকে ভিন্নভাবে object বানানোর সুযোগ দেয়, যেমন এখানে ডিফল্ট Guest ভ্যালু দিয়ে।'},
+  {l:'Student("Fahim", 3.75).dekhao();',e:'এখানে Student("Fahim", 3.75) দিয়ে একটা আসল object (real জিনিস) তৈরি হলো, তারপর তার dekhao() মেথড কল করা হলো।'},
+ ],
+ pr:["Book নামে একটা class বানাও (title, price) — ২টা object বানিয়ে show() কল করো।","Book.free() নামে named constructor বানাও, যেখানে price থাকবে 0।"]},
+{id:"inherit",s:"সেশন ১০",t:"ইনহেরিটেন্স ও অ্যাসোসিয়েশন",
+ th:`<code>extends</code>: চাইল্ড ক্লাস প্যারেন্টের সবকিছু পেয়ে যায়। <code>super</code>: প্যারেন্টের constructor কল করে। <code>@override</code>: প্যারেন্টের মেথডকে নতুন করে লেখা। <b>Association</b>: has-a সম্পর্ক — যেমন একজন Student এর একটা Address <b>আছে</b>।`,
+ code:`class Animal {
+  String naam;
+  Animal(this.naam);
+  void awaj() => print("\$naam একটা শব্দ করে");
+}
+
+class Cat extends Animal {
+  Cat(String naam) : super(naam);   // প্যারেন্ট constructor কল হলো
+  @override
+  void awaj() => print("\$naam বলে Meow!"); // নতুন করে লেখা হলো
+}
+
+void main() {
+  Cat("Mini").awaj();  // আউটপুট: Mini বলে Meow!
+}`,
+ line:[
+  {l:'class Cat extends Animal {',e:'extends দিয়ে বোঝানো হলো Cat, Animal এর সব property ও মেথড পাবে — এটাই ইনহেরিটেন্স।'},
+  {l:'Cat(String naam) : super(naam);',e:'super(naam) দিয়ে প্যারেন্ট (Animal) এর constructor কল করা হলো, যাতে naam প্রপার্টিটা ঠিকমতো সেট হয়।'},
+  {l:'void awaj() => print("$naam বলে Meow!");',e:'@override দিয়ে বোঝানো হলো এটা প্যারেন্টের awaj() মেথডকে নতুন করে লেখা হচ্ছে — একে বলে পলিমরফিজম।'},
+ ],
+ pr:["Vehicle থেকে Car, Bike বানাও এবং sound() override করো।","Teacher ও Department এর মধ্যে association বানাও (has-a সম্পর্ক)।"]},
+{id:"abstract",s:"সেশন ১১",t:"অ্যাবস্ট্রাক্ট ক্লাস ও মেথড",
+ th:`<b>Abstract class</b>: এর object সরাসরি বানানো যায় না, এটা শুধু একটা "চুক্তি" (contract) হিসেবে কাজ করে। <b>Abstract method</b>: এর কোনো body থাকে না — চাইল্ড ক্লাসকে <b>অবশ্যই</b> নিজে implement করতে হবে। ফ্লাটারের <code>StatelessWidget</code> নিজেই abstract — তুমি শুধু <code>build()</code> মেথডটা override করো!`,
+ code:`abstract class Shape {
+  double area(); // body নেই — শুধু বলা আছে "area() থাকতেই হবে"
+}
+
+class Circle extends Shape {
+  double r;
+  Circle(this.r);
+
+  @override
+  double area() => 3.1416 * r * r;  // নিজের মতো করে implement করা হলো
+}
+
+void main() {
+  print("ক্ষেত্রফল: \${Circle(5).area()}");
+}`,
+ line:[
+  {l:'abstract class Shape {',e:'abstract class মানে এই ক্লাসের সরাসরি object বানানো যাবে না — এটা শুধু বলে দেয় চাইল্ড ক্লাসে কী কী থাকতেই হবে।'},
+  {l:'double area();',e:'এখানে কোনো { } নেই, মানে body নেই — এটা abstract method, প্রতিটা চাইল্ড ক্লাসকে নিজের মতো করে এটা লিখতে হবে।'},
+  {l:'double area() => 3.1416 * r * r;',e:'Circle ক্লাস নিজের মতো করে area() লিখলো — এটাই abstract method এর "চুক্তি পূরণ" করা।'},
+ ],
+ pr:["abstract Payment ক্লাস বানাও, তার pay() মেথড Bkash ও Nagad ক্লাসে implement করো।","Shape ক্লাসে perimeter() মেথড যোগ করো।"]},
+];
+
+const exams=[
+{id:"e1",t:"পরীক্ষা ১ · ডার্ট বেসিক্স",cov:"সেশন ২-৪ · টাইপ, ইন্টারপোলেশন, অপারেটর, const",time:300,qs:[
+ {q:"int x = 10 ~/ 3; print(x); — output ki?",o:["3.33","3","1","error"],a:1,ex:"~/ holo integer division — doshomik baad."},
+ {q:"Kon type int ar double DUTAI rakhte pare?",o:["var","Object","num","dynamic"],a:2,ex:"num = int + double er parent type."},
+ {q:'print("\${2 + 3}5"); — output?',o:["25","55","2+35","error"],a:1,ex:"\${2+3} → 5, tarpor '5' — tai \"55\"."},
+ {q:'var name = "Dart"; name = 10; — ki hobe?',o:["10 print hobe","runtime error","compile error","null"],a:2,ex:"var er type ekbar infer hole (String) change hoy na — compile error."},
+ {q:"Compile time ei value fixed thakte hobe — kon keyword?",o:["final","const","late","static"],a:1,ex:"const = compile-time constant; final = runtime."},
+ {q:'String? n; print(n ?? "Hi"); — output?',o:["null","error","Hi","n"],a:2,ex:"?? — value null hole default ta use hoy."},
+ {q:"print(10 % 3); — output?",o:["3","1","0","3.33"],a:1,ex:"% = remainder (vagshesh). 10 = 3×3 + 1."},
+ {q:"late variable value deyar AGE use korle?",o:["null pabe","0 pabe","compile error","runtime error"],a:3,ex:"late er promise: pore value dibo. Na dile runtime e LateInitializationError."},
+]},
+{id:"e2",t:"পরীক্ষা ২ · কালেকশন ও কন্ট্রোল ফ্লো",cov:"সেশন ৫-৭ · List/Set/Map, if-switch, লুপ",time:300,qs:[
+ {q:"Set<int> s = {1, 2, 2, 3}; s.length — koto?",o:["4","3","2","error"],a:1,ex:"Set duplicate rakhe na — {1,2,3}."},
+ {q:"Kon collection e duplicate ALLOWED?",o:["Set","Map keys","List","kono tai na"],a:2,ex:"List ordered ebong duplicate OK."},
+ {q:"Map er value access kora hoy ki diye?",o:["index","key","position","loop chara jay na"],a:1,ex:'Map key-value pair — m["name"] style.'},
+ {q:"for (int i = 0; i < 3; i++) — body koto bar cholbe?",o:["2","3","4","infinite"],a:1,ex:"i = 0, 1, 2 — mot 3 bar."},
+ {q:"do-while loop MINIMUM koto bar chole?",o:["0","1","2","condition er upor"],a:1,ex:"Body age chole, condition pore check — tai at least 1 bar."},
+ {q:"while (false) { print('hi'); } — koto bar print?",o:["1","0","infinite","error"],a:1,ex:"while age condition check kore — false tai 0 bar."},
+ {q:"list.add(x) — x kothay jog hoy?",o:["shurute","sheshe","majhe","random"],a:1,ex:"add() sobsomoy list er sheshe append kore."},
+ {q:"Exact value match (jemon grade 'A') er jonno best?",o:["if-else","switch-case","loop","try-catch"],a:1,ex:"Fixed value compare e switch beshi clean; range hole if-else."},
+]},
+{id:"e3",t:"পরীক্ষা ৩ · ফাংশন ও OOP",cov:"সেশন ৮-১১ · প্যারামিটার, ক্লাস, ইনহেরিটেন্স, অ্যাবস্ট্রাক্ট",time:300,qs:[
+ {q:"Named parameter kon bracket e lekha hoy?",o:["( )","[ ]","{ }","< >"],a:2,ex:"void f({required int x}) — curly braces."},
+ {q:"required keyword er kaj?",o:["type fix kore","named param mandatory kore","value fix kore","null banay"],a:1,ex:"Named param optional by default — required dile dite-e hobe."},
+ {q:"=> (arrow) er mane?",o:["comment","single expression return","loop","inheritance"],a:1,ex:"int sq(n) => n*n; — ek line function."},
+ {q:"Constructor er name ki hoy?",o:["main","init","class er name","new"],a:2,ex:"Constructor class er name ei hoy — Student() for class Student."},
+ {q:"Inheritance er keyword?",o:["implements","with","extends","super"],a:2,ex:"class Cat extends Animal — Cat sob pay."},
+ {q:"Parent er method notun kore lekhar annotation?",o:["@new","@replace","@override","@super"],a:2,ex:"@override — parent er method child e redefine."},
+ {q:"Abstract class er object banano jay?",o:["jay","jay na","shudhu main e jay","const dile jay"],a:1,ex:"Abstract = blueprint only — direct object impossible."},
+ {q:"Student.guest() — eta ki?",o:["method","named constructor","static function","getter"],a:1,ex:"ClassName.name() pattern = named constructor."},
+]},
+{id:"e4",t:"ফাইনাল পরীক্ষা · সম্পূর্ণ ডার্ট",cov:"সেশন ২-১১ · সব টপিক মিশিয়ে (আরও কঠিন!)",time:420,qs:[
+ {q:'print("Dart".length); — output?',o:["3","4","5","error"],a:1,ex:"D-a-r-t = 4 character."},
+ {q:"var a = 5; a += 2; a *= 2; print(a);",o:["12","14","10","9"],a:1,ex:"5+2=7, 7×2=14."},
+ {q:"[1, 1, 2].toSet().length — koto?",o:["3","2","1","error"],a:1,ex:"Set banale duplicate 1 chole jay → {1,2}."},
+ {q:"for (int i=1; i<=4; i++) sum += i; — sum?",o:["6","10","15","4"],a:1,ex:"1+2+3+4 = 10."},
+ {q:"const t = DateTime.now(); — ki hobe?",o:["time print","null","compile error","runtime error"],a:2,ex:"DateTime.now() runtime value — const compile time chay."},
+ {q:"Child class e sound() override korle, child object er .sound() call e kar version cholbe?",o:["parent er","child er","dutoi","error"],a:1,ex:"Override mane child er version parent er ta replace kore."},
+ {q:'var m = {"a": 1}; m["b"] = 2; m.length?',o:["1","2","3","error"],a:1,ex:"Notun key add holo — 2ta pair."},
+ {q:"print(7 ~/ 2); print(7 % 2); — outputs?",o:["3.5, 1","3, 1","3, 0","4, 1"],a:1,ex:"~/ = 3 (int div), % = 1 (remainder)."},
+ {q:"Abstract method er ki thake na?",o:["name","return type","body","parameter"],a:2,ex:"Body thake na — child implement kore."},
+ {q:"Dart e multiple inheritance (2 parent extends)?",o:["jay","jay na","abstract hole jay","const hole jay"],a:1,ex:"Dart e single inheritance — similar kaj mixin diye hoy."},
+]},
+];
+
+const guessQs=[
+ {c:'int a = 2;\na = a * a * a;\nprint(a);',o:["6","8","4"],a:1,ex:"2×2×2 = 8"},
+ {c:'String s = "Flutter";\nprint(s.substring(0, 4));',o:["Flut","Flu","tter"],a:0,ex:"index 0 theke 4 er AGE porjonto — F,l,u,t"},
+ {c:'List l = [10, 20, 30];\nl.removeAt(1);\nprint(l);',o:["[20, 30]","[10, 30]","[10, 20]"],a:1,ex:"index 1 = 20 remove holo"},
+ {c:'int i = 0;\nwhile (i < 3) { i += 2; }\nprint(i);',o:["3","2","4"],a:2,ex:"0→2→4; 4<3 false tai stop. Output 4"},
+ {c:'bool x = 5 > 3 && 2 > 4;\nprint(x);',o:["true","false","error"],a:1,ex:"true && false = false"},
+];
+
+const stories=[
+{ch:"Chapter 1",t:"Rakib er Prothom Din — Variable er Baksho",
+ story:`Rakib notun notun Dart shikhte boshlo. Or teacher bollo — <b>"Dart e kono value rakhte hole age ekta baksho banate hoy, ar oi baksho er gaye ki dhoroner jinis thakbe seta lekha thake।"</b> Jemon <code>int</code> baksho te shudhu number thake, <code>String</code> baksho te lekha thake। Rakib nijer naam, boyosh, ar CGPA rakhar jonno alada alada baksho banalo — ar dekhlo Dart nijei check kore je bhul type dile compiler agei dhore fele, run howar age-i!`,
+ code:`void main() {
+  String name = "Rakib";
+  int age = 20;
+  double cgpa = 3.68;
+  bool isPresent = true;
+
+  print("Naam: $name, Boyosh: $age");
+  print("CGPA: $cgpa, Class e ache: $isPresent");
+}`,
+ explain:`<b>Ki hocche:</b> protita variable ekta "labeled box" — <code>String name</code> mane "name" nam er box e shudhu text thakbe। Dart <b>statically typed</b>, mane box banar shomoy-i type fix hoye jay — pore ulta type dile compiler error dey, run-e hoye rastay bhul dhora porar cheye ei better.`,
+ moral:"Mone rakho: type = box er label. Label bhul hole jinis dhukbe na."},
+
+{ch:"Chapter 2",t:"var, dynamic ar Object — Tin Bondhu",
+ story:`Rakib er ekjon confusion holo — <b>var</b>, <b>dynamic</b> ar <b>Object</b> er modhdhe parthokko ki? Teacher explain korlo tinjon bondhur golpo diye: <b>var</b> bondhu ekbar decide korle ar mot palte na (safe, disciplined)। <b>dynamic</b> bondhu jekono somoy mon change kore — aj String, kalke int (risky, kintu flexible)। <b>Object</b> holo shobar boro bhai — shobkichu-i tar theke ashe।`,
+ code:`void main() {
+  var city = "Dhaka";     // ekbar String, shobshomoy String
+  // city = 100;          // ERROR! type change hoy na
+
+  dynamic mood = "Happy";
+  print(mood);
+  mood = 100;              // allowed — dynamic e change hoy
+  print(mood);
+
+  Object anything = "kichu ekta";
+  print(anything.runtimeType); // String
+}`,
+ explain:`<b>Best practice:</b> jotokhon possible <code>var</code> use koro — safe, ar Dart nijei shothik type infer kore neyi। <code>dynamic</code> shudhu tokhon use koro jokhon shotti-i runtime e type change hobar dorkar (jemon JSON theke ashe emon flexible data).`,
+ moral:"var = disciplined, dynamic = risky flexible, Object = sobar parent."},
+
+{ch:"Chapter 3",t:"Operator Bazar — Hishab Nikash",
+ story:`Rakib bazar e gelo — sekhane operator gulo jeno dokandar, protita alada kaj kore। <b>+ - * /</b> to shobai chene। Kintu <code>~/</code> holo ekjon strict dokandar — shudhu <b>integer</b> ans dey, doshomik kete fele। Ar <code>??</code> holo ekjon backup-friendly dokandar — value na thakle default ans dey, kokhono khali hate ferot pathay na!`,
+ code:`void main() {
+  int total = 17, people = 5;
+  print(total / people);   // 3.4  (double)
+  print(total ~/ people);  // 3    (int, decimal katha)
+  print(total % people);   // 2    (remainder)
+
+  String? nickname;
+  print(nickname ?? "Guest"); // null hole default
+
+  int? score = 90;
+  print(score?.isEven);       // null-safe access
+}`,
+ explain:`<b>~/</b> ke bole "integer division" — bhag korar por doshomik ongsho baad dey। <b>??</b> operator check kore left dik null kina — null hole right dik er value use hoy। <b>?.</b> object null hole crash na kore shudhu null return kore — Flutter e ei pattern har-hamesha lage।`,
+ moral:"?? ar ?. tomake null-crash theke bachay — ei duita mukhosto koro!"},
+
+{ch:"Chapter 4",t:"List, Set, Map — Tin Dokan er Golpo",
+ story:`Rakib tinta dokan dekhlo pashapashi। Prothom dokane (<b>List</b>) jekono jinis jotobar khushi rakha jay, order moto shajano thake। Dwitiyo dokane (<b>Set</b>) malik bole dilo — "ekbar ekta jinis rakhle, dobar rakhte parba na, duplicate allow na"। Tritiyo dokane (<b>Map</b>) protita jinish er jonno ekta "tag" (key) lagano — tag dhore khoj korle jinis pawa jay shathe shathe।`,
+ code:`void main() {
+  List<String> cart = ["Rice", "Oil", "Rice"];
+  cart.add("Salt");
+  print(cart);              // [Rice, Oil, Rice, Salt]
+
+  Set<String> uniqueItems = {"Rice", "Oil", "Rice"};
+  print(uniqueItems);       // {Rice, Oil} — duplicate gelo
+
+  Map<String, double> prices = {"Rice": 65.0, "Oil": 180.0};
+  prices["Salt"] = 40.0;
+  print(prices["Oil"]);     // 180.0
+}`,
+ explain:`List index diye access hoy (<code>cart[0]</code>), Set e index nei — shudhu presence check hoy। Map e key diye value khoja jay — real life e API theke asha JSON data ei Map format-ei ashe, tai eta khub important।`,
+ moral:"Order lagle List, Unique lagle Set, Tag/Key lagle Map."},
+
+{ch:"Chapter 5",t:"Decision Point — if-else ar switch",
+ story:`Rakib er exam er result ber hobe। Teacher bollo, jodi <b>range</b> check korte hoy (jemon marks 80 ba tar upore) tahole <b>if-else</b> use koro। Kintu jodi <b>exact value</b> match korte hoy (jemon din er naam) tahole <b>switch</b> onek beshi porishkar dekhay।`,
+ code:`void main() {
+  int marks = 78;
+  String grade;
+  if (marks >= 80) {
+    grade = "A+";
+  } else if (marks >= 70) {
+    grade = "A";
+  } else {
+    grade = "Try Again";
+  }
+  print("Grade: $grade");
+
+  String day = "Friday";
+  switch (day) {
+    case "Friday":
+      print("Namaz er din!");
+      break;
+    default:
+      print("Shadharon din");
+  }
+}`,
+ explain:`if-else chain-e prothom true howa condition-e thamiye jay — tai order important। switch e <code>break</code> na dile "fall-through" hoy, mane porer case-eo cholte thake — Dart e eta niye khub shotorko thakte hoy।`,
+ moral:"Range → if-else, Exact match → switch."},
+
+{ch:"Chapter 6",t:"Loop — Baar Baar Kaj",
+ story:`Rakib ke 100 bar "I will not talk in class" likhte bola holo (punishment!) — hater lekha na, code diye korlo। <b>for</b> loop use korlo jehetu shongkha jana chilo (100 bar)। Porer din, teacher bollo "jotokhon na class shesh hoy, porte thako" — eta holo <b>while</b> loop, kotobar cholbe age theke jana nei, condition check hote thake.`,
+ code:`void main() {
+  for (int i = 1; i <= 5; i++) {
+    print("Attempt $i: I will not talk in class");
+  }
+
+  int fuel = 3;
+  while (fuel > 0) {
+    print("Gari cholche... fuel left: $fuel");
+    fuel--;
+  }
+
+  int x = 10;
+  do {
+    print("Eta at-least ekbar cholbe, x=$x");
+  } while (x < 5);
+}`,
+ explain:`<code>do-while</code> er specialty holo — condition mithya hoyeo body ekbar cholbei, karon check hoy body run howar <b>por</b>। <code>break</code> diye loop majhpothe bondho kora jay, <code>continue</code> diye ekta step skip kore porerta te jawa jay।`,
+ moral:"Shongkha jana thakle for, na jana thakle while, at-least ekbar cholte hobei? do-while."},
+
+{ch:"Chapter 7",t:"Function — Chhoto Chhoto Kaj Ready Rakha",
+ story:`Rakib proti diner rannaghore alada alada kaj kore — chal dhowa, taka gona, ranna kora। Prottekta kaj-ke alada "recipe" hisebe likhe rakhle, jokhon dorkar dakle-i hoy, baar baar likhte hoy na। Eta-i <b>function</b> — ekta kaj-ke ekta naam diye ready rakha, dorkar mote call kora.`,
+ code:`// Positional parameter
+int add(int a, int b) {
+  return a + b;
+}
+
+// Named parameter (Flutter e emon-i hoy!)
+void introduce({required String name, int age = 18}) {
+  print("Ami $name, boyosh $age");
+}
+
+// Arrow function — 1 line e return
+int square(int n) => n * n;
+
+void main() {
+  print(add(4, 6));
+  introduce(name: "Nahin", age: 21);
+  introduce(name: "Guest");   // age default 18
+  print(square(5));
+}`,
+ explain:`<b>Positional</b> parameter e order maintain korte hoy। <b>Named</b> parameter <code>{}</code> diye lekha hoy, call korar shomoy naam bole dite hoy — bhul order hoyeo problem hoy na। <code>required</code> na dile oi parameter optional hoye jay।`,
+ moral:"Flutter er protita Widget e Named Parameter use hoy — eta bhalo kore bujhe rakho!"},
+
+{ch:"Chapter 8",t:"Class o Object — Blueprint theke Real Jinis",
+ story:`Rakib ekta building design (<b>Class</b>) dekhlo — eta shudhu design, thakar jaiga na। Kintu shei design diye jokhon asholei ekta building toiri hoy (<b>Object</b>), tokhon manush thakte pare। Ek design diye onek building banano jay — protitar nijer alada thikana (data) thake, kintu structure ekই.`,
+ code:`class Student {
+  String name;
+  double cgpa;
+
+  Student(this.name, this.cgpa);       // constructor
+  Student.guest() : name = "Guest", cgpa = 0.0;  // named constructor
+
+  void show() {
+    print("$name — CGPA: $cgpa");
+  }
+}
+
+void main() {
+  var s1 = Student("Rakib", 3.68);
+  var s2 = Student.guest();
+  s1.show();
+  s2.show();
+}`,
+ explain:`Class holo blueprint, <code>Student("Rakib", 3.68)</code> likhle ekta real Object toiri hoy। <b>Named constructor</b> (<code>Student.guest()</code>) diye ekই class theke alada alada shajano object banano jay।`,
+ moral:"Class = Nokshah (design), Object = Baastob building."},
+
+{ch:"Chapter 9",t:"Inheritance o Abstract — Poribar er Golpo",
+ story:`Rakib er poribar e baba-r kichu common gun shobar modhhe ashe (naam, height) — eta <b>Inheritance</b>। Kintu prottek bhai-bon er nijer alada kaj korar style ache — eta <b>Override</b>। Ar ekta "Family Rule Book" ache (<b>abstract class</b>) — eta nijei kaj kore na, shudhu bole dey "protita family member-ke ei kajta korte-i hobe, kemon korbe seta tumi thik koro।"`,
+ code:`abstract class Vehicle {
+  void move(); // body nei — must implement
+}
+
+class Car extends Vehicle {
+  @override
+  void move() => print("Car chole 4 chakay");
+}
+
+class Bike extends Vehicle {
+  @override
+  void move() => print("Bike chole 2 chakay");
+}
+
+void main() {
+  Vehicle v1 = Car();
+  Vehicle v2 = Bike();
+  v1.move();
+  v2.move();
+}`,
+ explain:`<code>abstract class</code> er object shorashori banano jay na — eta shudhu ekta contract। Child class gulo <code>extends</code> diye shob property pay, ar <code>@override</code> diye nijer moto kore method likhte pare — eke bola hoy <b>Polymorphism</b>: ekই type (Vehicle) diye kaj korle-o alada alada behavior ashe।`,
+ moral:"Flutter er StatelessWidget nijeই abstract — tumi shudhu build() override koro!"},
+
+{ch:"Chapter 10",t:"Exception Handling — Jokhon Kichu Bhul Hoye Jay",
+ story:`Rakib ekdin code likhte giye ekta bhul number diye divide korte gelo (0 diye bhag) — app crash kore gelo! Teacher shikhalo, real life e emon "biporjoy" ashbei — kintu app crash howa manei kharap na, <b>try-catch</b> diye seta "shamlano" jay, jate app cholte thake, user ke friendly message dekhano jay।`,
+ code:`void main() {
+  try {
+    int a = 10;
+    int b = 0;
+    var result = a ~/ b;  // error hobe
+    print(result);
+  } catch (e) {
+    print("Kichu ekta bhul hoyeche: $e");
+  } finally {
+    print("Eta shobshomoy cholbe — cleanup er jonno bhalo");
+  }
+  print("App crash korlo na, cholte thakbe!");
+}`,
+ explain:`<code>try</code> block e risky code rakho। Bhul hole <code>catch</code> block dhore fele, app crash hoy na। <code>finally</code> block error hok ba na hok — <b>shobshomoy</b> cholbe (jemon file close kora, loading bondho kora)।`,
+ moral:"Network call, file read, user input — jekhaneই bhul howar shombhabona ache, sekhaneই try-catch lagao."},
+
+{ch:"Chapter 11",t:"Enum o Mixin — Fixed Options ar Shared Power",
+ story:`Rakib er app e ekta order er "status" thake — kintu status to shudhu kichu <b>fixed</b> option hote pare: Pending, Shipped, Delivered — r kichu na। Eijonno <b>enum</b> use kora hoy, jate bhul kore onno kichu na likhe fela hoy। Ar dhoro, "Flyable" (urte para) ekta khamota jeta Bird ar Airplane duitai use korte pare, kintu duitar common parent nei — ei khetre <b>mixin</b> diye "power ta ador kore niye" ekaddhik class e chapano jay।`,
+ code:`enum OrderStatus { pending, shipped, delivered }
+
+mixin Flyable {
+  void fly() => print("Uraaa uraaa! Urte pari!");
+}
+
+class Bird with Flyable {}
+class Airplane with Flyable {}
+
+void main() {
+  var status = OrderStatus.shipped;
+  print(status); // OrderStatus.shipped
+
+  if (status == OrderStatus.shipped) {
+    print("Order pathano hoyeche!");
+  }
+
+  Bird().fly();
+  Airplane().fly();
+}`,
+ explain:`<code>enum</code> diye fixed shet of value banano jay — type-safe, bhul value dhukte parbe na। <code>mixin</code> holo "shared behavior" — <code>with</code> keyword diye jeta chai shei class e jog kora jay, eta inheritance na, extra power add kora matro।`,
+ moral:"Fixed choices? enum. Common power, kintu common parent nei? mixin."},
+
+{ch:"Chapter 12",t:"Async, Future o Generics — Advanced Level",
+ story:`Rakib er app ekta API theke data anbe — kintu internet theke data ashte kichu shomoy lage, ar oi shomoy app ke "atke" thakle cholbe na (freeze hoye jabe!)। Tai <b>async-await</b> diye "wait koro, kintu ei shomoy onno kaj cholte dao" — eta-i asynchronous programming। Ar <b>Generics</b> holo ekta "universal container" — ekbar likhle shob type er jonno kaj kore, alada alada likhte hoy na।`,
+ code:`// Generics — ekই function shob type e kaj kore
+T getFirst<T>(List<T> items) {
+  return items[0];
+}
+
+// Future o async-await — network call simulate
+Future<String> fetchUserName() async {
+  await Future.delayed(Duration(seconds: 2)); // 2 sec wait
+  return "Rakib";
+}
+
+void main() async {
+  print(getFirst<int>([10, 20, 30]));       // 10
+  print(getFirst<String>(["A", "B", "C"])); // A
+
+  print("Data anchi...");
+  String name = await fetchUserName();
+  print("Data eshe gelo: $name");
+}`,
+ explain:`<code>Future&lt;String&gt;</code> mane — "ekhon String nei, kintu bhobishshote pabe"। <code>async</code> function er bhitore <code>await</code> likhle Dart oi line e wait kore, kintu <b>UI freeze hoy na</b>। Generics-e <code>&lt;T&gt;</code> ekta "type placeholder" — call korar shomoy real type (int, String) bosano hoy। Flutter er API call, database read — shobkichu-i Future/async diye hoy।`,
+ moral:"Internet/DB theke data anle সবসময় Future + async/await — eta professional Flutter developer howar sob theke important step!"},
+];
+
+const cheats=[
+ {t:"ভ্যারিয়েবল ও টাইপ",c:`int a = 5;  double d = 3.14;
+String s = "hi";  bool b = true;
+num n = 5;        // int + double
+var x = "auto";   // type infer
+dynamic y = 1;    // no type check`},
+ {t:"final · const · late",c:`final t = DateTime.now(); // runtime
+const pi = 3.1416;        // compile time
+late String name;         // value pore`},
+ {t:"স্ট্রিং ইন্টারপোলেশন",c:`print("Hi \$name");
+print("Sum: \${a + b}");
+print("\${name.toUpperCase()}");`},
+ {t:"অপারেটর",c:`10 / 3   // 3.33 (double)
+10 ~/ 3  // 3 (int)
+10 % 3   // 1 (remainder)
+x ?? "default"  // null hole
+a is int        // type check`},
+ {t:"কালেকশন",c:`List<int> l = [1, 2, 2];
+Set<int>  s = {1, 2};   // unique
+Map<String, int> m = {"a": 1};
+l.add(3); l.remove(2);
+m["b"] = 2;  m.length;`},
+ {t:"কন্ট্রোল ফ্লো",c:`if (x >= 80) {...} else if {...}
+switch (day) {
+  case "Sat": ...
+  default: ...
+}`},
+ {t:"লুপ",c:`for (int i=0; i<5; i++) {...}
+while (cond) {...}
+do {...} while (cond); // min 1 bar
+for (var x in list) {...}
+break;  continue;`},
+ {t:"ফাংশন",c:`int add(int a, int b) => a + b;
+void f({required int x, int y=0}) {}
+f(x: 5);          // named call
+String g(a, [b]) {...} // optional`},
+ {t:"ক্লাস ও কনস্ট্রাক্টর",c:`class Student {
+  String name;
+  Student(this.name);       // param
+  Student.guest(): name=""; // named
+}`},
+ {t:"OOP কী-ওয়ার্ড",c:`class Cat extends Animal {
+  Cat(n) : super(n);
+  @override
+  void sound() {...}
+}
+abstract class Shape {
+  double area(); // no body
+}`},
+ {t:"নাল সেফটি",c:`String? name;        // nullable
+String name2 = "hi";  // non-nullable
+name ?? "default";     // if null
+name?.length;           // safe call
+name!.length;            // force (careful!)
+late String x;           // value pore`},
+ {t:"এক্সেপশন হ্যান্ডলিং",c:`try {
+  int r = 10 ~/ 0;
+} catch (e) {
+  print("Error: \$e");
+} finally {
+  print("always runs");
+}
+throw Exception("custom error");`},
+ {t:"এনাম (Enum)",c:`enum Status { pending, shipped, done }
+var s = Status.pending;
+if (s == Status.pending) {...}
+print(s.name); // "pending"`},
+ {t:"মিক্সিন (Mixin)",c:`mixin Flyable {
+  void fly() => print("flying");
+}
+class Bird with Flyable {}
+Bird().fly();`},
+ {t:"জেনেরিক্স",c:`T first<T>(List<T> l) => l[0];
+class Box<T> {
+  T value;
+  Box(this.value);
+}
+Box<int>(10).value;`},
+ {t:"Async · Future · await",c:`Future<String> getData() async {
+  await Future.delayed(Duration(seconds: 1));
+  return "done";
+}
+void main() async {
+  var r = await getData();
+  print(r);
+}`},
+ {t:"এক্সটেনশন মেথড",c:`extension NumX on int {
+  bool get isEven2 => this % 2 == 0;
+}
+print(4.isEven2); // true`},
+ {t:"স্ট্রিং মেথড",c:`s.toUpperCase(); s.toLowerCase();
+s.trim(); s.split(",");
+s.contains("a"); s.replaceAll("a","b");
+s.substring(0,3); s.isEmpty;`},
+ {t:"লিস্ট মেথড",c:`l.sort(); l.reversed;
+l.map((x)=>x*2).toList();
+l.where((x)=>x>5).toList();
+l.reduce((a,b)=>a+b);
+l.forEach((x)=>print(x));`},
+];
+
+const badgeDefs=[
+ {id:"first",ic:"🌱",t:"First Step",d:"1 lesson complete"},
+ {id:"half",ic:"🔥",t:"Halfway",d:"6 lessons complete"},
+ {id:"scholar",ic:"🎓",t:"Scholar",d:"Sob 11 lesson done"},
+ {id:"exam1",ic:"✏️",t:"Contestant",d:"Prothom exam deya"},
+ {id:"aplus",ic:"⭐",t:"A+ Achiever",d:"Je kono exam e A+"},
+ {id:"cgpa4",ic:"🏆",t:"Perfect 4.00",d:"4 exam e CGPA 4.00"},
+ {id:"sharp",ic:"🎯",t:"Sharp Eye",d:"Guess game 5/5"},
+];
+
+/* ================= STATE ================= */
+const state={done:new Set(),exams:{},wrong:[],badges:new Set(),guessBest:0};
+
+/* ================= HELPERS ================= */
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function hl(code){return esc(code)
+ .replace(/(\/\/[^\n]*)/g,'<span class="c">$1</span>')
+ .replace(/("(?:[^"\\]|\\.)*")/g,'<span class="s">$1</span>')
+ .replace(/\b(void|int|double|String|bool|num|var|dynamic|Object|final|const|late|if|else|switch|case|default|for|while|do|in|class|extends|abstract|return|required|this|super|true|false|null|List|Set|Map|print|DateTime)\b/g,'<span class="k">$1</span>')
+ .replace(/\b(\d+\.?\d*)\b/g,'<span class="num">$1</span>');}
+function gradeOf(pct){
+ if(pct>=80)return["A+",4.00];if(pct>=75)return["A",3.75];if(pct>=70)return["A-",3.50];
+ if(pct>=65)return["B+",3.25];if(pct>=60)return["B",3.00];if(pct>=55)return["B-",2.75];
+ if(pct>=50)return["C+",2.50];if(pct>=45)return["C",2.25];if(pct>=40)return["D",2.00];return["F",0.00];}
+
+/* ================= TABS ================= */
+document.querySelectorAll('.tabbtn').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('show'));
+ b.classList.add('active');$('tab-'+b.dataset.tab).classList.add('show');
+ if(b.dataset.tab==='dash')renderDash();
+ window.scrollTo({top:0});
+}));
+
+/* ================= LESSONS ================= */
+lessons.forEach((L,i)=>{
+ const sec=document.createElement('section');sec.className='card';sec.id=L.id;
+ const lineHtml=(L.line&&L.line.length)?`<div class="linexplain">
+   <h4 class="bn">🧠 লাইন ধরে ধরে বোঝা</h4>
+   ${L.line.map(x=>`<div class="lrow"><code class="lcode">${esc(x.l)}</code><div class="ltext bn">${x.e}</div></div>`).join('')}
+  </div>`:'';
+ sec.innerHTML=`<div class="card-head"><span class="badge bn">${L.s}</span><h3 class="bn">${String(i+1).padStart(2,'0')}. ${L.t}</h3></div>
+ <p class="theory bn">${L.th}</p>
+ <div class="codebox"><div class="bar"><span>main.dart</span><button class="copybtn bn" data-i="${i}">কপি করো → কম্পাইলারে</button></div><pre>${hl(L.code)}</pre></div>
+ ${lineHtml}
+ <div class="practice"><h4 class="bn">🧪 প্র্যাকটিস টাস্ক</h4><ol class="bn">${L.pr.map(p=>`<li>${p}</li>`).join('')}</ol></div>
+ <button class="donebtn bn" data-i="${i}">✓ এই পাঠ সম্পূর্ণ হলো</button>`;
+ $('lessonsMain').appendChild(sec);
+ const a=document.createElement('a');a.href='#'+L.id;a.id='toc-'+i;
+ a.innerHTML=`<span class="n">${String(i+1).padStart(2,'0')}</span> <span class="bn">${L.t}</span>`;
+ $('tocLinks').appendChild(a);
+});
+document.addEventListener('click',e=>{
+ const cb=e.target.closest('.copybtn');
+ if(cb){navigator.clipboard.writeText(lessons[cb.dataset.i].code).then(()=>{
+   cb.textContent='কপি হয়েছে! কম্পাইলারে পেস্ট করো ⬇';cb.classList.add('copied');
+   setTimeout(()=>{cb.textContent='কপি করো → কম্পাইলারে';cb.classList.remove('copied')},2500);
+   $('compiler').scrollIntoView({behavior:'smooth',block:'center'});});}
+ const db=e.target.closest('.donebtn');
+ if(db){const i=+db.dataset.i;
+  if(state.done.has(i)){state.done.delete(i);db.classList.remove('on');db.textContent='✓ এই পাঠ সম্পূর্ণ হলো';$('toc-'+i).classList.remove('done');}
+  else{state.done.add(i);db.classList.add('on');db.textContent='✓ সম্পূর্ণ হয়েছে!';$('toc-'+i).classList.add('done');}
+  checkBadges();}
+});
+
+/* ================= VISUAL: MEMORY ================= */
+$('memAdd').addEventListener('click',()=>{
+ const t=$('memType').value,n=$('memName').value.trim()||'x',v=$('memVal').value.trim();
+ const msg=$('memMsg');msg.className='vmsg';
+ let type=t,val=v;
+ if(!v){msg.textContent='আগে একটা ভ্যালু দাও!';msg.classList.add('err');return;}
+ const isInt=/^-?\d+$/.test(v),isDbl=/^-?\d+\.\d+$/.test(v),isBool=(v==='true'||v==='false');
+ if(t==='int'&&!isInt){msg.textContent=`কম্পাইল এরর! int বক্সে "${v}" ঢুকবে না — টাইপ মিলছে না।`;msg.classList.add('err');return;}
+ if(t==='double'&&!(isDbl||isInt)){msg.textContent=`কম্পাইল এরর! double বক্সে সংখ্যা লাগবে।`;msg.classList.add('err');return;}
+ if(t==='bool'&&!isBool){msg.textContent='bool বক্সে শুধু true/false যায়।';msg.classList.add('err');return;}
+ if(t==='var'){type=isInt?'int (inferred)':isDbl?'double (inferred)':isBool?'bool (inferred)':'String (inferred)';
+  msg.textContent=`Dart নিজেই টাইপ বুঝে নিলো: ${type}`;msg.classList.add('ok');}
+ if(type.startsWith('String')||t==='String')val=`"${v.replace(/"/g,'')}"`;
+ const d=document.createElement('div');d.className='mem';
+ d.innerHTML=`<div class="mt">${type}</div><div class="mv">${esc(val)}</div><div class="mn">${esc(n)}</div>`;
+ $('memBox').appendChild(d);
+ if(t!=='var'){msg.textContent=`মেমরিতে "${n}" নামে বক্স তৈরি হলো — টাইপ: ${t}`;msg.classList.add('ok');}
+});
+$('memClr').addEventListener('click',()=>{$('memBox').innerHTML='';$('memMsg').textContent='';});
+
+/* ================= VISUAL: COLLECTIONS ================= */
+const setVals=new Set();
+function chip(txt,parent,cls=''){const c=document.createElement('div');c.className='chip '+cls;c.textContent=txt;
+ c.title='Click = remove()';c.addEventListener('click',()=>{if(cls==='setc')setVals.delete(txt);c.remove();});parent.appendChild(c);return c;}
+$('addList').addEventListener('click',()=>{const v=$('colVal').value.trim();if(!v)return;
+ chip(v,$('listChips'));$('colMsg').textContent=`List.add("${v}") — লিস্টের শেষে যোগ হলো (ডুপ্লিকেট চলবে)`;$('colMsg').className='vmsg ok';});
+$('addSet').addEventListener('click',()=>{const v=$('colVal').value.trim();if(!v)return;const m=$('colMsg');
+ if(setVals.has(v)){[...$('setChips').children].forEach(c=>{if(c.textContent===v){c.classList.add('shake');setTimeout(()=>c.classList.remove('shake'),500);}});
+  m.textContent=`ডুপ্লিকেট! Set "${v}" রিজেক্ট করে দিলো — শুধু ইউনিক ভ্যালু নেয়।`;m.className='vmsg err';}
+ else{setVals.add(v);chip(v,$('setChips'),'setc');m.textContent=`Set.add("${v}") — গৃহীত হলো`;m.className='vmsg ok';}});
+$('addMap').addEventListener('click',()=>{const k=$('mapK').value.trim(),v=$('mapV').value.trim();if(!k||!v)return;
+ chip(`${k} : ${v}`,$('mapChips'),'mapc');$('colMsg').textContent=`map["${k}"] = "${v}" — key-value জোড়া তৈরি হলো`;$('colMsg').className='vmsg ok';});
+
+/* ================= VISUAL: LOOP STEPPER ================= */
+let loopSteps=[],loopIdx=0,loopTimer=null;
+function buildLoop(){loopSteps=[{l:0,i:null,c:'—',n:'init: i = 1'}];
+ for(let i=1;i<=5;i++){const ok=i<=4;
+  loopSteps.push({l:0,i,c:ok?'true ✓':'false ✗',n:`check: ${i} <= 4 → ${ok}`});
+  if(ok){loopSteps.push({l:1,i,c:'true ✓',n:'body: print',out:`i = ${i}`});
+   loopSteps.push({l:0,i:i+1,c:'—',n:`increment: i++ → ${i+1}`});}}
+ loopSteps.push({l:3,i:5,c:'false ✗',n:'loop shesh!'});}
+function loopRender(){const s=loopSteps[loopIdx];
+ document.querySelectorAll('.lline').forEach(x=>x.classList.remove('hot'));
+ document.querySelector(`.lline[data-l="${s.l}"]`).classList.add('hot');
+ $('loopI').textContent=s.i??'—';$('loopCond').textContent=s.c;$('loopStepName').textContent=s.n;
+ if(s.out){const d=document.createElement('div');d.textContent='> '+s.out;$('loopOut').appendChild(d);$('loopOut').scrollTop=9999;}}
+function loopStep(){if(loopIdx<loopSteps.length-1){loopIdx++;loopRender();}else if(loopTimer){clearInterval(loopTimer);loopTimer=null;$('loopAuto').textContent='Auto play';}}
+function loopReset(){if(loopTimer){clearInterval(loopTimer);loopTimer=null;$('loopAuto').textContent='Auto play';}
+ loopIdx=0;$('loopOut').innerHTML='';buildLoop();loopRender();}
+$('loopStep').addEventListener('click',loopStep);
+$('loopReset').addEventListener('click',loopReset);
+$('loopAuto').addEventListener('click',()=>{if(loopTimer){clearInterval(loopTimer);loopTimer=null;$('loopAuto').textContent='Auto play';}
+ else{$('loopAuto').textContent='Pause';loopTimer=setInterval(loopStep,750);}});
+buildLoop();loopRender();
+
+/* ================= VISUAL: TREE ================= */
+const treeData={
+ animal:`<b>abstract class Animal</b> — এর object বানানো যায় না, এটা শুধু ব্লুপ্রিন্ট।<br>প্রপার্টি: <span class="inh">String name</span><br>মেথড: <span class="inh">void sound()</span> — চাইল্ড ক্লাস এটা পাবে অথবা override করবে।`,
+ cat:`<b>class Cat extends Animal</b><br><span class="inh">✓ name — Animal থেকে ইনহেরিটেড (ফ্রি পেয়ে গেলো!)</span><br><span class="ovr">↻ sound() — ওভাররাইড করা হয়েছে: "Meow!"</span><br>super(name) দিয়ে প্যারেন্ট constructor কল করা হয়েছে।`,
+ dog:`<b>class Dog extends Animal</b><br><span class="inh">✓ name — Animal থেকে ইনহেরিটেড</span><br><span class="ovr">↻ sound() — ওভাররাইড করা হয়েছে: "Woof!"</span><br>একই প্যারেন্ট, কিন্তু আলাদা আলাদা আচরণ — এটাই পলিমরফিজমের শুরু।`};
+document.querySelectorAll('.tnode').forEach(n=>n.addEventListener('click',()=>{
+ document.querySelectorAll('.tnode').forEach(x=>x.classList.remove('sel'));n.classList.add('sel');
+ $('treeInfo').innerHTML=treeData[n.dataset.n];}));
+
+/* ================= EXAM ================= */
+function renderExamGrid(){$('examGrid').innerHTML=exams.map(E=>{
+ const r=state.exams[E.id];
+ return `<div class="examcard"><h3>${E.t}</h3><div class="meta bn">${E.cov} · ${E.qs.length} questions · ${E.time/60} min</div>
+ <div class="gradechip ${r?'good':''}">${r?`সেরা: ${r.grade} (${r.pct}%)`:'এখনো দাওনি'}</div><br>
+ <button class="btn bn" onclick="startExam('${E.id}')">${r?'আবার দাও (সেরাটাই থাকবে)':'পরীক্ষা শুরু করো'}</button></div>`;}).join('');}
+renderExamGrid();
+
+let curExam=null,curQ=0,answers=[],timeLeft=0,examTimer=null;
+window.startExam=function(id){curExam=exams.find(e=>e.id===id);curQ=0;answers=Array(curExam.qs.length).fill(null);
+ timeLeft=curExam.time;$('examHome').style.display='none';$('examRun').style.display='block';
+ clearInterval(examTimer);examTimer=setInterval(()=>{timeLeft--;const t=$('exTimer');
+  if(t){t.textContent=fmtT(timeLeft);if(timeLeft<=30)t.classList.add('danger');}
+  if(timeLeft<=0)finishExam();},1000);
+ renderQ();};
+const fmtT=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+function renderQ(){const E=curExam,Q=E.qs[curQ];
+ $('examRun').innerHTML=`<div class="qtop"><div><b>${E.t}</b><div style="font-size:.78rem;color:var(--muted)" class="bn">প্রশ্ন ${curQ+1} / ${E.qs.length}</div></div>
+ <div class="timer" id="exTimer">${fmtT(timeLeft)}</div></div>
+ <div class="qbar"><div style="width:${(curQ)/E.qs.length*100}%"></div></div>
+ <div class="qtext">${esc(Q.q)}</div>
+ ${Q.o.map((o,i)=>`<button class="opt ${answers[curQ]===i?'sel':''}" onclick="pick(${i})">${String.fromCharCode(65+i)}. ${esc(o)}</button>`).join('')}
+ <div style="display:flex;gap:10px;margin-top:16px;justify-content:space-between">
+  <button class="btn ghost bn" onclick="navQ(-1)" ${curQ===0?'disabled':''}>← আগে</button>
+  ${curQ<E.qs.length-1?`<button class="btn bn" onclick="navQ(1)">পরের প্রশ্ন →</button>`:`<button class="btn bn" style="background:var(--green);color:#04121F" onclick="finishExam()">সাবমিট ✓</button>`}
+ </div>`;}
+window.pick=i=>{answers[curQ]=i;renderQ();};
+window.navQ=d=>{curQ+=d;renderQ();};
+window.finishExam=function(){clearInterval(examTimer);
+ const E=curExam;let score=0;const wrongs=[];
+ E.qs.forEach((Q,i)=>{if(answers[i]===Q.a)score++;else wrongs.push({q:Q.q,your:answers[i]===null?'(skip)':Q.o[answers[i]],right:Q.o[Q.a],ex:Q.ex,exam:E.t});});
+ const pct=Math.round(score/E.qs.length*100);const[grade,gp]=gradeOf(pct);
+ const prev=state.exams[E.id];
+ if(!prev||pct>prev.pct)state.exams[E.id]={score,total:E.qs.length,pct,grade,gp};
+ wrongs.forEach(w=>{if(!state.wrong.some(x=>x.q===w.q))state.wrong.push(w);});
+ checkBadges();
+ $('examRun').innerHTML=`<div class="result">
+  <div class="bn" style="color:var(--muted)">${E.t} — Result</div>
+  <div class="bigGrade">${grade}</div>
+  <div class="rstats">
+   <div class="rstat"><div class="v">${score}/${E.qs.length}</div><div class="l">Score</div></div>
+   <div class="rstat"><div class="v">${pct}%</div><div class="l">Percentage</div></div>
+   <div class="rstat"><div class="v">${gp.toFixed(2)}</div><div class="l">Grade Point</div></div>
+  </div>
+  ${wrongs.length?`<h3 class="bn" style="text-align:left;font-family:'Space Grotesk';margin:10px 0">❌ ভুল উত্তর (${wrongs.length}টা)</h3>`+
+   wrongs.map(w=>`<div class="wrongitem"><b>${esc(w.q)}</b><br>তোমার উত্তর: <span style="color:var(--red)">${esc(w.your)}</span> · সঠিক: <span style="color:var(--green)">${esc(w.right)}</span><div class="ex bn">💡 ${w.ex}</div></div>`).join('')
+   :`<p class="bn" style="color:var(--green)">🎉 Sob thik! Outstanding!</p>`}
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+   <button class="btn ghost bn" onclick="backExam()">← পরীক্ষার লিস্টে</button>
+   <button class="btn bn" onclick="startExam('${E.id}')">আবার দাও</button>
+  </div></div>`;};
+window.backExam=function(){$('examRun').style.display='none';$('examHome').style.display='block';renderExamGrid();};
+
+/* ================= GUESS GAME ================= */
+let gIdx=0,gScore=0;
+$('guessStart').addEventListener('click',()=>{gIdx=0;gScore=0;renderGuess();});
+function renderGuess(){const A=$('guessArea');
+ if(gIdx>=guessQs.length){if(gScore>state.guessBest)state.guessBest=gScore;checkBadges();
+  A.innerHTML=`<div class="result"><div class="bigGrade" style="font-size:2.4rem">${gScore}/${guessQs.length}</div>
+  <p class="bn" style="color:var(--muted)">${gScore===5?'🎯 Sharp Eye badge unlocked!':'Abar try koro — 5/5 e badge ache!'}</p></div>`;return;}
+ const G=guessQs[gIdx];
+ A.innerHTML=`<div style="font-size:.8rem;color:var(--muted)" class="bn">রাউন্ড ${gIdx+1}/${guessQs.length} · স্কোর: ${gScore}</div>
+ <div class="qcode">${hl(G.c)}</div><div class="bn" style="font-weight:600;margin-bottom:6px">আউটপুট কী হবে?</div>
+ ${G.o.map((o,i)=>`<button class="opt" data-g="${i}">${esc(o)}</button>`).join('')}`;
+ A.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+  const i=+b.dataset.g;A.querySelectorAll('.opt').forEach((x,xi)=>{x.disabled=true;if(xi===G.a)x.classList.add('right');else if(xi===i)x.classList.add('wrong');});
+  if(i===G.a)gScore++;
+  const ex=document.createElement('p');ex.className='bn';ex.style.cssText='font-size:.85rem;color:var(--muted);margin-top:8px';ex.textContent='💡 '+G.ex;A.appendChild(ex);
+  const nb=document.createElement('button');nb.className='btn bn';nb.style.marginTop='10px';nb.textContent=gIdx<guessQs.length-1?'পরের রাউন্ড →':'রেজাল্ট দেখো';
+  nb.addEventListener('click',()=>{gIdx++;renderGuess();});A.appendChild(nb);}));}
+
+/* ================= GOLPE GOLPE (STORY MODE) ================= */
+let storyIdx=0;
+$('storyNav').innerHTML=stories.map((s,i)=>`<button data-i="${i}">${i+1}. ${s.t.split(' — ')[0]}</button>`).join('');
+function renderStory(){
+ const s=stories[storyIdx];
+ document.querySelectorAll('#storyNav button').forEach((b,i)=>b.classList.toggle('active',i===storyIdx));
+ $('storyCard').innerHTML=`
+  <div class="chapno bn">${s.ch} · ${storyIdx+1} / ${stories.length}</div>
+  <h2 class="bn">${s.t}</h2>
+  <div class="storytext bn">📖 ${s.story}</div>
+  <div class="codebox"><div class="bar"><span>main.dart</span><button class="copybtn bn" id="storyCopy">কপি করো → কম্পাইলারে</button></div><pre>${hl(s.code)}</pre></div>
+  <div class="storytext bn">🧠 ${s.explain}</div>
+  <div class="storymoral bn">✨ <b>মনে রাখার মতো:</b> ${s.moral}</div>
+  <div class="storynavbtns">
+   <button class="btn ghost bn" id="storyPrev" ${storyIdx===0?'disabled':''}>← আগের চ্যাপ্টার</button>
+   <button class="btn bn" id="storyNext" ${storyIdx===stories.length-1?'disabled':''}>পরের চ্যাপ্টার →</button>
+  </div>`;
+ $('storyCopy').addEventListener('click',()=>{
+  navigator.clipboard.writeText(s.code).then(()=>{
+   $('storyCopy').textContent='কপি হয়েছে!';$('storyCopy').classList.add('copied');
+   setTimeout(()=>{$('storyCopy').textContent='কপি করো → কম্পাইলারে';$('storyCopy').classList.remove('copied');},2000);});});
+ const pv=$('storyPrev'),nx=$('storyNext');
+ if(pv)pv.addEventListener('click',()=>{storyIdx--;renderStory();window.scrollTo({top:0,behavior:'smooth'});});
+ if(nx)nx.addEventListener('click',()=>{storyIdx++;renderStory();window.scrollTo({top:0,behavior:'smooth'});});
+}
+$('storyNav').addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ storyIdx=+b.dataset.i;renderStory();});
+renderStory();
+
+/* ================= CHEAT SHEET ================= */
+$('cheatGrid').innerHTML=cheats.map(c=>`<div class="cheat"><h4>${c.t}</h4><pre>${hl(c.c)}</pre></div>`).join('');
+
+/* ================= BADGES & DASH ================= */
+function checkBadges(){const b=state.badges;
+ if(state.done.size>=1)b.add('first');
+ if(state.done.size>=6)b.add('half');
+ if(state.done.size>=11)b.add('scholar');
+ const taken=Object.keys(state.exams).length;
+ if(taken>=1)b.add('exam1');
+ if(Object.values(state.exams).some(r=>r.grade==='A+'))b.add('aplus');
+ if(taken===4&&Object.values(state.exams).every(r=>r.gp===4))b.add('cgpa4');
+ if(state.guessBest===5)b.add('sharp');}
+function renderDash(){checkBadges();
+ const taken=Object.values(state.exams);
+ const cgpa=taken.length?(taken.reduce((s,r)=>s+r.gp,0)/taken.length).toFixed(2):'—';
+ $('dCgpa').textContent=cgpa;
+ $('dLessons').textContent=`${state.done.size}/11`;
+ $('dExams').textContent=`${taken.length}/4`;
+ $('dBadges').textContent=state.badges.size;
+ $('resTable').innerHTML=taken.length?exams.filter(E=>state.exams[E.id]).map(E=>{const r=state.exams[E.id];
+  return `<tr><td>${E.t}</td><td>${r.score}/${r.total}</td><td>${r.pct}%</td><td><b style="color:var(--dart)">${r.grade}</b></td><td>${r.gp.toFixed(2)}</td></tr>`;}).join('')
+  :`<tr><td colspan="5" class="bn" style="color:var(--muted)">এখনো কোনো পরীক্ষা দাওনি — "পরীক্ষা প্রতিযোগিতা" ট্যাবে যাও!</td></tr>`;
+ $('badgeGrid').innerHTML=badgeDefs.map(B=>`<div class="bdg ${state.badges.has(B.id)?'on':''}"><div class="ic">${B.ic}</div><div class="t">${B.t}</div><div class="d bn">${B.d}</div></div>`).join('');
+ $('revList').innerHTML=state.wrong.length?state.wrong.map(w=>`<div class="wrongitem"><b>${esc(w.q)}</b> <span style="font-size:.75rem;color:var(--muted)">(${w.exam})</span><br>সঠিক: <span style="color:var(--green)">${esc(w.right)}</span><div class="ex bn">💡 ${w.ex}</div></div>`).join('')
+  :'Ekhono kichu nei. Bhul korle ekhane ashbe (bhul kora kharap na — eta e shekhar path!)';}
+</script>
+</body>
+</html>
